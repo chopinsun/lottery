@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF" monitorInterval="30">
+
+    <appenders><!--log_path为vm参数，在tomcat中start.sh配置,log4j2在vm参数前要加sys:-->
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{rid}] %-5level %C.%M %L - %m%n"/>
+        </Console>
+
+    </appenders>
+    <loggers>
+        <Logger name="com.suns.lottery.tball.mapper" level="TRACE" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <root level="INFO">
+            <appender-ref ref="Console"/>
+        </root>
+    </loggers>
+</configuration>
