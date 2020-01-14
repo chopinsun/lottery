@@ -17,4 +17,6 @@ public interface LotteryMapper {
     List<Lottery> selectAll();
 
     int updateByPrimaryKey(Lottery record);
+
+    int countByNum(int num);
 }

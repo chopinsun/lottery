@@ -103,4 +103,8 @@
 
 
   </insert>
+
+  <select id="countByNum" parameterType="java.lang.Integer">
+    select count(*) from lottery where r1=#{0} or r2=#{0} or r3=#{0} or r4=#{0} or r5=#{0} or r6=#{0}
+  </select>
 </mapper>

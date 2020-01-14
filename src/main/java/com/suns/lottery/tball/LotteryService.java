@@ -45,6 +45,18 @@ public class LotteryService {
     @Autowired
     private RestTemplate template;
 
+    /**
+     * @Description: 定时同步最新数据
+     * @param null
+     * @return:
+     *
+     * @Creator: sunxiaobo
+     * @Date: 2020/1/14 19:46
+     *
+     * @Modify: sunxiaobo
+     * @Date: 2020/1/14 19:46
+     *
+     **/
     public JSONObject upateData(int rowNum){
         HttpHeaders headers  = new HttpHeaders();
         headers.add("X-Requested-With","XMLHttpRequest");
@@ -75,7 +87,18 @@ public class LotteryService {
         return JSONObject.parseObject(JSONObject.toJSONString(response));
     }
 
-
+    /**
+     * @Description: 一次性拉取所有历史数据
+     * @param null
+     * @return:
+     *
+     * @Creator: sunxiaobo
+     * @Date: 2020/1/14 19:47
+     *
+     * @Modify: sunxiaobo
+     * @Date: 2020/1/14 19:47
+     *
+     **/
     public void pullAllData(){
         HttpHeaders headers  = new HttpHeaders();
 
@@ -112,5 +135,50 @@ public class LotteryService {
 //        ResponseEntity<String> response = template.exchange("http://datachart.500.com/ssq/history/newinc/history.php?start=03001&end=20005", HttpMethod.GET,new HttpEntity<>(new LinkedMultiValueMap(),headers),String.class,new HashMap<>(2));
 //        log.info(response.getBody());
     }
+    /**
+     * @Description: 最少出现的数字生成号码
+     * @param null
+     * @return:
+     *
+     * @Creator: sunxiaobo
+     * @Date: 2020/1/14 19:48
+     *
+     * @Modify: sunxiaobo
+     * @Date: 2020/1/14 19:48
+     *
+     **/
+    public void generateNumByMin(){
+        /**
+         *红球共33个
+         *每个数字查一遍，统计最少出现的12个数字
+         *随机取6个数字出来，组成号码
+         * 将号码按照从小到大排序，便于观看
+         * 篮球共16个
+         * 篮球取最少出现的3个球，随机取一个
+         **/
+        for (int i = 1; i <= 33; i++) {
+            int n = lotteryMapper.countByNum(i);
+        }
 
+
+
+
+
+    }
+
+    /**
+     * @Description: 最常出现的数字生成号码
+     * @param null
+     * @return:
+     *
+     * @Creator: sunxiaobo
+     * @Date: 2020/1/14 19:49
+     *
+     * @Modify: sunxiaobo
+     * @Date: 2020/1/14 19:49
+     *
+     **/
+    public void generateNumByMax(){
+
+    }
 }
