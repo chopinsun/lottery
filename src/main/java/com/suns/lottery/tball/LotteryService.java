@@ -1,9 +1,13 @@
 package com.suns.lottery.tball;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.HistoryData;
 import com.suns.lottery.tball.bean.Lottery;
 import com.suns.lottery.tball.bean.LotteryResult;
+import com.suns.lottery.tball.common.Constants;
+import com.suns.lottery.tball.common.Sort;
 import com.suns.lottery.tball.mapper.LotteryMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
 import com.suns.lottery.tball.utils.NumberUtils;
@@ -23,10 +27,10 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @title: lottery-tball
@@ -147,7 +151,8 @@ public class LotteryService {
      * @Date: 2020/1/14 19:48
      *
      **/
-    public void generateNumByMin(){
+    public List<String> generateNumByMin(int num){
+        List<String> result = new ArrayList<>(8);
         /**
          *红球共33个
          *每个数字查一遍，统计最少出现的12个数字
@@ -156,14 +161,33 @@ public class LotteryService {
          * 篮球共16个
          * 篮球取最少出现的3个球，随机取一个
          **/
-        for (int i = 1; i <= 33; i++) {
-            int n = lotteryMapper.countByNum(i);
-        }
-
-
-
-
-
+        Map<Integer,Integer> map = new HashMap<>();
+        IntStream.range(1, 34).forEach(i->{
+            int n = lotteryMapper.countByRedNum(i);
+            map.put(i,n);
+        });
+        log.info(map);
+        Set<Map.Entry<Integer,Integer>> entrys = map.entrySet();
+        log.info("红球-size:{}",entrys.size());
+        log.info("红球-原始数据:{}",JSONObject.toJSONString(map));
+        log.info("红球-总排序:{}",JSONArray.toJSONString(entrys.stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toList())));
+        List<Integer> redBalls = entrys.stream().sorted(Map.Entry.comparingByValue()).limit(Constants.REDBALLLIMIT).map(n->n.getKey()).collect(Collectors.toList());
+        log.info("红球-前{}位:{}",Constants.REDBALLLIMIT,JSONArray.toJSONString(redBalls));
+        List<Integer> blueBallsResult = lotteryMapper.countByBlueNum(Sort.ASC.getCode());
+        log.info("蓝球-总排序:{}",JSONArray.toJSONString(blueBallsResult));
+        List<Integer> blueBalls = blueBallsResult.stream().limit(Constants.BLUEBALLLIMIT).collect(Collectors.toList());
+        log.info("蓝球-前{}位:{}",JSONArray.toJSONString(blueBalls));
+        IntStream.range(0,num).forEach(m->{
+            Random rand = new Random();
+            Set<Integer> rbs = new HashSet<>();
+            while(rbs.size()<6){
+                rbs.add(redBalls.get(rand.nextInt(Constants.REDBALLLIMIT)));
+            }
+            List<Integer> balls = rbs.stream().sorted(Comparator.comparingInt(o->o)).collect(Collectors.toList());
+            balls.add(blueBalls.get(rand.nextInt(Constants.BLUEBALLLIMIT)));
+            result.add(NumberUtils.toString(balls));
+        });
+        return result;
     }
 
     /**
@@ -178,7 +202,9 @@ public class LotteryService {
      * @Date: 2020/1/14 19:49
      *
      **/
-    public void generateNumByMax(){
-
+    public List<String> generateNumByMax(int num){
+        return null;
     }
+
+
 }

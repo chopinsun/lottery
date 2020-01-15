@@ -104,7 +104,10 @@
 
   </insert>
 
-  <select id="countByNum" parameterType="java.lang.Integer">
+  <select id="countByRedNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     select count(*) from lottery where r1=#{0} or r2=#{0} or r3=#{0} or r4=#{0} or r5=#{0} or r6=#{0}
+  </select>
+  <select id="countByBlueNum" resultType="java.lang.Integer">
+    SELECT t.b1 FROM (select COUNT(*) cnt,b1 from lottery group by b1) t ORDER BY t.cnt ${sort}
   </select>
 </mapper>

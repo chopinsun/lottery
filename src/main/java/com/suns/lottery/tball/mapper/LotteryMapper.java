@@ -2,9 +2,11 @@ package com.suns.lottery.tball.mapper;
 
 import com.suns.lottery.tball.bean.Lottery;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LotteryMapper {
     int deleteByPrimaryKey(Integer id);
@@ -18,5 +20,6 @@ public interface LotteryMapper {
 
     int updateByPrimaryKey(Lottery record);
 
-    int countByNum(int num);
+    int countByRedNum(int num);
+    List<Integer> countByBlueNum(@Param("sort") String sort);
 }

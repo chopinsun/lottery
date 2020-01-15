@@ -7,6 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
 /**
  * @title: lottery-tball
  * @description:
@@ -21,9 +25,23 @@ public class MainController {
 
     @ResponseBody
     @RequestMapping("/pullData")
-    public void pulldate(){
-        lotteryService.pullAllData();
+    public String pulldate(){
+//        lotteryService.pullAllData();
+        return "done!";
     }
 
+    @ResponseBody
+    @RequestMapping("/generate/min")
+    public List<String> generateMin(Integer n){
+        List<String> list = lotteryService.generateNumByMin(n);
+        return list;
+    }
+
+    @ResponseBody
+    @RequestMapping("/generate/max")
+    public List<String> generateMax(Integer n){
+        List<String> list = lotteryService.generateNumByMax(n);
+        return list;
+    }
 
 }
