@@ -2,28 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suns.lottery.tball.mapper.LotteryMapper" >
   <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.Lottery" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="code" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="r1" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="r2" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="r3" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="r4" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="r5" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="r6" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="b1" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="b2" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="sales" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="poolmoney" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="content" jdbcType="VARCHAR" javaType="java.lang.Integer" />
-      <arg column="type1_num" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="type1_money" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="type2_num" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="type2_money" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="type3_num" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="type3_money" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="lottery_date" jdbcType="DATE" javaType="java.util.Date" />
-    </constructor>
+      <result column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+      <result column="code" jdbcType="VARCHAR" javaType="java.lang.String" property="code"/>
+      <result column="r1" jdbcType="INTEGER" javaType="java.lang.Integer" property="r1"/>
+      <result column="r2" jdbcType="INTEGER" javaType="java.lang.Integer" property="r2"/>
+      <result column="r3" jdbcType="INTEGER" javaType="java.lang.Integer" property="r3"/>
+      <result column="r4" jdbcType="INTEGER" javaType="java.lang.Integer" property="r4"/>
+      <result column="r5" jdbcType="INTEGER" javaType="java.lang.Integer" property="r5"/>
+      <result column="r6" jdbcType="INTEGER" javaType="java.lang.Integer" property="r6"/>
+      <result column="b1" jdbcType="INTEGER" javaType="java.lang.Integer" property="b1"/>
+      <result column="b2" jdbcType="INTEGER" javaType="java.lang.Integer" property="b2"/>
+      <result column="sales" jdbcType="INTEGER" javaType="java.lang.Integer" property="sales"/>
+      <result column="poolmoney" jdbcType="INTEGER" javaType="java.lang.Integer" property="poolmoney"/>
+      <result column="content" jdbcType="VARCHAR" javaType="java.lang.String" property="content"/>
+      <result column="type1_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Num"/>
+      <result column="type1_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Money"/>
+      <result column="type2_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Num"/>
+      <result column="type2_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Money"/>
+      <result column="type3_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Num"/>
+      <result column="type3_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Money"/>
+      <result column="lottery_date" jdbcType="DATE" javaType="java.util.Date" property="lotteryDate"/>
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from lottery
@@ -110,4 +108,19 @@
   <select id="countByBlueNum" resultType="java.lang.Integer">
     SELECT t.b1 FROM (select COUNT(*) cnt,b1 from lottery group by b1) t ORDER BY t.cnt ${sort}
   </select>
+
+  <select id="countByBlueNum2" resultType="java.util.Map">
+    select b1 ball,COUNT(*) cnt from lottery group by b1
+  </select>
+
+  <select id="exists" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from lottery where r1=#{r1} and r2=#{r2} and r3=#{r3} and r4=#{r4} and r5=#{r5} and r6=#{r6}
+  </select>
+
+  <select id="history" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, type1_num,
+    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+     from lottery order by code desc limit #{0}
+  </select>
+
 </mapper>

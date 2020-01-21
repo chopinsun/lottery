@@ -12,6 +12,7 @@ import com.suns.lottery.tball.mapper.LotteryMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
 import com.suns.lottery.tball.utils.NumberUtils;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.RandomUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -151,8 +152,8 @@ public class LotteryService {
      * @Date: 2020/1/14 19:48
      *
      **/
-    public List<String> generateNumByMin(int num){
-        List<String> result = new ArrayList<>(8);
+    public Set<List<Integer>> generateNumByMin(int num){
+        Set<List<Integer>> result = new HashSet<>(num);
         /**
          *红球共33个
          *每个数字查一遍，统计最少出现的12个数字
@@ -177,7 +178,8 @@ public class LotteryService {
         log.info("蓝球-总排序:{}",JSONArray.toJSONString(blueBallsResult));
         List<Integer> blueBalls = blueBallsResult.stream().limit(Constants.BLUEBALLLIMIT).collect(Collectors.toList());
         log.info("蓝球-前{}位:{}",JSONArray.toJSONString(blueBalls));
-        IntStream.range(0,num).forEach(m->{
+
+        while (result.size()<num){
             Random rand = new Random();
             Set<Integer> rbs = new HashSet<>();
             while(rbs.size()<6){
@@ -185,8 +187,8 @@ public class LotteryService {
             }
             List<Integer> balls = rbs.stream().sorted(Comparator.comparingInt(o->o)).collect(Collectors.toList());
             balls.add(blueBalls.get(rand.nextInt(Constants.BLUEBALLLIMIT)));
-            result.add(NumberUtils.toString(balls));
-        });
+            result.add(balls);
+        }
         return result;
     }
 
@@ -205,6 +207,98 @@ public class LotteryService {
     public List<String> generateNumByMax(int num){
         return null;
     }
+
+
+    /**
+     * @Description: 最常出现的数字生成号码
+     * @param null
+     * @return:
+     *
+     * @Creator: sunxiaobo
+     * @Date: 2020/1/14 19:49
+     *
+     * @Modify: sunxiaobo
+     * @Date: 2020/1/14 19:49
+     *
+     **/
+    public Set<List<Integer>> generateNumByMix(int num){
+        Set<List<Integer>> result = new HashSet<>(num);
+        /**
+         *红球：
+         *最少出现的15个数字，取4个
+         *出现次数居于16-28之间的，取1个
+         *最多出现的5个数字，取1个
+         * 将号码按照从小到大排序，便于观看
+         * 蓝球：
+         * 随机取一个
+         **/
+
+        Map<Integer,Integer> map = new HashMap<>();
+        IntStream.range(1, 34).forEach(i->{
+            int n = lotteryMapper.countByRedNum(i);
+            map.put(i,n);
+        });
+        log.info(map);
+        Set<Map.Entry<Integer,Integer>> entrys = map.entrySet();
+        log.info("红球-size:{}",entrys.size());
+        log.info("红球-原始数据:{}",JSONObject.toJSONString(map));
+        List<Integer> redBalls = entrys.stream().sorted(Map.Entry.comparingByValue()).map(n->n.getKey()).collect(Collectors.toList());
+        log.info("红球-总排序:{}",Constants.REDBALLLIMIT,JSONArray.toJSONString(redBalls));
+        List<Integer> blueBalls = lotteryMapper.countByBlueNum(Sort.ASC.getCode());
+        log.info("蓝球-总排序:{}",JSONArray.toJSONString(blueBalls));
+
+        while(result.size()<num){
+            Set<Integer> rbs = new HashSet<>();
+            //前15个取4个
+            while(rbs.size()<4){
+                rbs.add(redBalls.get(RandomUtils.nextInt(1,Constants.REDBALLLIMIT)));
+            }
+            //中间取1个
+            while(rbs.size()<5){
+                rbs.add(redBalls.get(RandomUtils.nextInt(Constants.REDBALLLIMIT_MID[0],Constants.REDBALLLIMIT_MID[1])));
+            }
+            //后5个取1个
+            while(rbs.size()<6){
+                rbs.add(redBalls.get(RandomUtils.nextInt(Constants.REDBALLLIMIT_MID[1],33)));
+            }
+            List<Integer> balls = rbs.stream().sorted(Comparator.comparingInt(o->o)).collect(Collectors.toList());
+            //排除历史数据
+            if(lotteryMapper.exists(balls.get(0),balls.get(1),balls.get(2),balls.get(3),balls.get(4),balls.get(5))==0){
+                balls.add(blueBalls.get(RandomUtils.nextInt(1,16)));
+                result.add(balls);
+            }
+        };
+        return result;
+    }
+
+    public List<Map<String,Integer>> redBallCount(){
+        List<Map<String,Integer>> redBallsResult= new ArrayList<>();
+        IntStream.range(1, 34).forEach(i->{
+            Map<String,Integer> map = new HashMap<>();
+            int n = lotteryMapper.countByRedNum(i);
+            map.put("ball",i);
+            map.put("cnt",n);
+            redBallsResult.add(map);
+        });
+        log.info("红球-原始数据:{}",JSONArray.toJSONString(redBallsResult));
+
+        List<Map<String,Integer>> blueBallsResult = lotteryMapper.countByBlueNum2();
+        log.info("蓝球-原始数据:{}",JSONArray.toJSONString(blueBallsResult));
+        return redBallsResult;
+    }
+
+    public List<Map<String,Integer>> blueBallCount(){
+        List<Map<String,Integer>> blueBallsResult = lotteryMapper.countByBlueNum2();
+        log.info("蓝球-原始数据:{}",JSONArray.toJSONString(blueBallsResult));
+        return blueBallsResult;
+    }
+
+
+    public List<Lottery> history(int n){
+        List<Lottery> list = lotteryMapper.history(n);
+        return list;
+    }
+
 
 
 }

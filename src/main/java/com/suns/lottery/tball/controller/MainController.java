@@ -2,6 +2,7 @@ package com.suns.lottery.tball.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.LotteryService;
+import com.suns.lottery.tball.bean.Lottery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
@@ -32,8 +35,8 @@ public class MainController {
 
     @ResponseBody
     @RequestMapping("/generate/min")
-    public List<String> generateMin(Integer n){
-        List<String> list = lotteryService.generateNumByMin(n);
+    public Set<List<Integer>> generateMin(Integer n){
+        Set<List<Integer>> list = lotteryService.generateNumByMin(n);
         return list;
     }
 
@@ -42,6 +45,32 @@ public class MainController {
     public List<String> generateMax(Integer n){
         List<String> list = lotteryService.generateNumByMax(n);
         return list;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/generate/mix")
+    public Set<List<Integer>> generateMix(Integer n){
+        Set<List<Integer>> list = lotteryService.generateNumByMix(n);
+        return list;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/count")
+    public JSONObject count(){
+        JSONObject result = new JSONObject();
+
+        result.put("redBall",lotteryService.redBallCount());
+        result.put("blueBall",lotteryService.blueBallCount());
+
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping("/history")
+    public List<Lottery> history(Integer n){
+        return lotteryService.history(n);
     }
 
 }
