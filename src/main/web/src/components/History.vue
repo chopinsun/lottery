@@ -33,7 +33,7 @@ export default {
     return{
       headers: [
         {text: '期号',  value: 'code'},
-        {text: '日期',  value: 'lotteryDate'},
+        {text: '开奖日期',  value: 'lotteryDate'},
         { text: '中奖号码', value: 'numbers', },
         { text: '奖池奖金', value: 'poolmoney',},
         { text: '一等奖', value: 'type1' },
