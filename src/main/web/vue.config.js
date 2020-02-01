@@ -1,10 +1,10 @@
 module.exports = {
   "devServer": {
     https: true,
-    "port": 443,
+    "port": 8080,
     proxy: {
       '/lottery': {
-        target: 'http://127.0.0.1:8080/lottery', //对应自己的接口
+        target: 'https://localhost:8666/lottery', //对应自己的接口
         changeOrigin: true,
         ws: true,
         pathRewrite: {
@@ -13,7 +13,7 @@ module.exports = {
       }
     }
   },
-  "outputDir": "../../resources/web",
+  "outputDir": "../resources/web",
   "transpileDependencies": [
     "vuetify"
   ],

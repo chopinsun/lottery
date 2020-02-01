@@ -1,6 +1,8 @@
 <template>
   <div class="homepage">
-    <v-app-bar color="white" >
+    
+    <v-container>
+      <v-app-bar color="white" >
       <!-- <v-btn icon> -->
       <v-icon large>mdi-home</v-icon>
       <!-- </v-btn> -->
@@ -34,19 +36,16 @@
       </v-menu>
 -->      
     </v-app-bar>
-    
-
-    <v-container>
       
       <v-divider></v-divider>
     <v-list>
     <v-list-item v-for="(item,idx) in items" :key="idx">
       <v-list-item-content>
         <v-list-item-title>
-          <v-btn class="mx-2" fab dark x-small color="red" v-for="n in 6" :key="n">
+          <v-btn class="mx-1" fab dark x-small color="red" v-for="n in 6" :key="n">
             <v-icon dark>{{item[n-1]}}</v-icon>
           </v-btn>
-          <v-btn class="mx-2" fab dark x-small color="blue">
+          <v-btn class="mx-1" fab dark x-small color="blue">
             <v-icon dark>{{item[6]}}</v-icon>
           </v-btn>
         </v-list-item-title>
@@ -56,12 +55,13 @@
      <!-- <v-btn absolute  dark  fab right color="pink" class="bottom80">
         <v-icon>mdi-plus</v-icon>
       </v-btn> -->
-      <v-btn absolute  dark  fab right color="pink" class="bottom80" v-on:click="search">
+      <v-btn fixed  dark  fab right color="pink" class="bottom80" v-on:click="search">
         <v-icon>mdi-sync</v-icon>
       </v-btn>
-    </v-container>
     <div class="footer">
     </div>
+    </v-container>
+ 
 
     <v-overlay absolute  :value="overlay">
       <v-card class="mx-auto" max-width="500" outlined  v-show="overlay" style="z-index:8" light>
@@ -126,7 +126,7 @@ export default {
            return this.customNum
         }
      
-    }
+    },
   },
   mounted(){
     this.search()
@@ -160,6 +160,14 @@ export default {
 </script>
 
 <style scoped>
+.container{
+  min-width: 320px;
+  padding: 8px;
+}
+.v-list-item{
+  padding: 0 8px;
+}
+
   .homepage .checkbox{
     align-items: center;
     display: inline-flex;
@@ -207,6 +215,7 @@ export default {
    .bottom100{
      bottom: 160px;
    }
+
    /* .v-btn{
      margin: 10px 0 ;
    } */
@@ -225,6 +234,10 @@ export default {
     background-color: #009688!important;
     color: #fff!important;
     
+  }
+
+  .v-btn--fab.v-btn--contained{
+    box-shadow: none!important;
   }
 
 </style>

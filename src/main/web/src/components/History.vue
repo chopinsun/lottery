@@ -32,6 +32,7 @@ export default {
   data() {
     return{
       headers: [
+        {text: '期号',  value: 'code'},
         {text: '日期',  value: 'lotteryDate'},
         { text: '中奖号码', value: 'numbers', },
         { text: '奖池奖金', value: 'poolmoney',},
@@ -54,7 +55,7 @@ export default {
        this.$axios
         .get('/lottery/history?n='+this.pageSize)
         .then(response => {
-          console.log(response)
+          console.log(response.data)
           response.data.forEach(e => {
             let i = e
             i.numbers = 

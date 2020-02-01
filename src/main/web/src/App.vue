@@ -68,3 +68,9 @@ export default {
   }
 }
 </script>
+<style lang="css">
+  .v-item-group.v-bottom-navigation .v-btn{
+  min-width: 60px!important;
+  padding: 8px;
+}
+</style>
