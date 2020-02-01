@@ -19,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -50,47 +51,6 @@ public class LotteryService {
     @Autowired
     private RestTemplate template;
 
-    /**
-     * @Description: 定时同步最新数据
-     * @param null
-     * @return:
-     *
-     * @Creator: sunxiaobo
-     * @Date: 2020/1/14 19:46
-     *
-     * @Modify: sunxiaobo
-     * @Date: 2020/1/14 19:46
-     *
-     **/
-    public JSONObject upateData(int rowNum){
-        HttpHeaders headers  = new HttpHeaders();
-        headers.add("X-Requested-With","XMLHttpRequest");
-        headers.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
-        headers.add("Referer","http://www.cwl.gov.cn/kjxx/ssq/kjgg/");
-        headers.add("Accept-Encoding","gzip, deflate");
-        headers.add("Connection","keep-alive");
-        headers.add("Accept","application/json, text/javascript, */*; q=0.01");
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        List<String> cookieList = new ArrayList<String>();
-        cookieList.add("UniqueID=gaGBV37PZpk7jVh81578884419537");
-        cookieList.add("Sites=_21");
-        cookieList.add("_ga=GA1.3.1997877985.1578376727");
-        cookieList.add("_Jo0OQK=548D51EE139C34EAF0A11CC98E01E2EC1B556DC1FD1C45ED67C60094C1A2D34AA4E9CD335BBE23D83187C1F1921FC381E7867DBC51FE6EFD7ED2DE98F4E2BF6F8E6F1B3C19C5B2FC5F8E6E66EDA7420CD4BE6E66EDA7420CD4B64AD0BB8F400A335D9A403BF43875897GJ1Z1IQ==");
-        cookieList.add("_gat_gtag_UA_113065506_1=1");
-        cookieList.add("21_vq=6");
-        //"UniqueID=gaGBV37PZpk7jVh81578884419537; Sites=_21; _ga=GA1.3.1997877985.1578376727; _gid=GA1.3.1582248760.1578884420; _Jo0OQK=548D51EE139C34EAF0A11CC98E01E2EC1B556DC1FD1C45ED67C60094C1A2D34AA4E9CD335BBE23D83187C1F1921FC381E7867DBC51FE6EFD7ED2DE98F4E2BF6F8E6F1B3C19C5B2FC5F8E6E66EDA7420CD4BE6E66EDA7420CD4B64AD0BB8F400A335D9A403BF43875897GJ1Z1IQ==; _gat_gtag_UA_113065506_1=1; 21_vq=6"
-        headers.put(HttpHeaders.COOKIE,cookieList);
-        HistoryData response = httpInvoker.get("http://www.cwl.gov.cn/cwl_admin/kjxx/findDrawNotice?name=ssq&issueCount="+rowNum, HistoryData.class,headers,new LinkedMultiValueMap());
-        log.info(JSONObject.toJSONString(response));
-        if(response.getState() ==0){
-            List<LotteryResult> result = response.getResult();
-            log.info("-----------------------------");
-            log.info("查询到{}条",result.size());
-            List<Lottery> list = result.stream().map(x->x.convert()).collect(Collectors.toList());
-            lotteryMapper.batchInsert(list);
-        }
-        return JSONObject.parseObject(JSONObject.toJSONString(response));
-    }
 
     /**
      * @Description: 一次性拉取所有历史数据
@@ -243,7 +203,7 @@ public class LotteryService {
         log.info("红球-size:{}",entrys.size());
         log.info("红球-原始数据:{}",JSONObject.toJSONString(map));
         List<Integer> redBalls = entrys.stream().sorted(Map.Entry.comparingByValue()).map(n->n.getKey()).collect(Collectors.toList());
-        log.info("红球-总排序:{}",Constants.REDBALLLIMIT,JSONArray.toJSONString(redBalls));
+        log.info("红球-总排序:{}",JSONArray.toJSONString(redBalls));
         List<Integer> blueBalls = lotteryMapper.countByBlueNum(Sort.ASC.getCode());
         log.info("蓝球-总排序:{}",JSONArray.toJSONString(blueBalls));
 

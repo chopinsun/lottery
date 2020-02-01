@@ -30,4 +30,7 @@ public interface LotteryMapper {
 
     List<Lottery> history(int n);
 
+
+    int countByCode(@Param("code") String code);
+
 }
