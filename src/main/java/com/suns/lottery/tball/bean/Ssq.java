@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Lottery {
+public class Ssq {
     private Integer id;
 
     private String code;

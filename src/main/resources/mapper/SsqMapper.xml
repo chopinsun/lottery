@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suns.lottery.tball.mapper.SsqMapper" >
+  <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.Ssq" >
+      <result column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+      <result column="code" jdbcType="VARCHAR" javaType="java.lang.String" property="code"/>
+      <result column="r1" jdbcType="INTEGER" javaType="java.lang.Integer" property="r1"/>
+      <result column="r2" jdbcType="INTEGER" javaType="java.lang.Integer" property="r2"/>
+      <result column="r3" jdbcType="INTEGER" javaType="java.lang.Integer" property="r3"/>
+      <result column="r4" jdbcType="INTEGER" javaType="java.lang.Integer" property="r4"/>
+      <result column="r5" jdbcType="INTEGER" javaType="java.lang.Integer" property="r5"/>
+      <result column="r6" jdbcType="INTEGER" javaType="java.lang.Integer" property="r6"/>
+      <result column="b1" jdbcType="INTEGER" javaType="java.lang.Integer" property="b1"/>
+      <result column="b2" jdbcType="INTEGER" javaType="java.lang.Integer" property="b2"/>
+      <result column="sales" jdbcType="INTEGER" javaType="java.lang.Integer" property="sales"/>
+      <result column="poolmoney" jdbcType="INTEGER" javaType="java.lang.Integer" property="poolmoney"/>
+      <result column="content" jdbcType="VARCHAR" javaType="java.lang.String" property="content"/>
+      <result column="type1_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Num"/>
+      <result column="type1_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Money"/>
+      <result column="type2_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Num"/>
+      <result column="type2_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Money"/>
+      <result column="type3_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Num"/>
+      <result column="type3_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Money"/>
+      <result column="lottery_date" jdbcType="DATE" javaType="java.util.Date" property="lotteryDate"/>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ssq
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.suns.lottery.tball.bean.Ssq" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ssq (code, r1, r2,
+      r3, r4, r5, r6, 
+      b1, b2, sales, poolmoney, 
+      content, type1_num, type1_money, 
+      type2_num, type2_money, type3_num, 
+      type3_money, lottery_date)
+    values (#{code,jdbcType=VARCHAR}, #{r1,jdbcType=VARCHAR}, #{r2,jdbcType=VARCHAR}, 
+      #{r3,jdbcType=VARCHAR}, #{r4,jdbcType=VARCHAR}, #{r5,jdbcType=VARCHAR}, #{r6,jdbcType=VARCHAR}, 
+      #{b1,jdbcType=VARCHAR}, #{b2,jdbcType=VARCHAR}, #{sales,jdbcType=VARCHAR}, #{poolmoney,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{type1Num,jdbcType=VARCHAR}, #{type1Money,jdbcType=VARCHAR}, 
+      #{type2Num,jdbcType=VARCHAR}, #{type2Money,jdbcType=VARCHAR}, #{type3Num,jdbcType=VARCHAR}, 
+      #{type3Money,jdbcType=VARCHAR}, #{lotteryDate,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.suns.lottery.tball.bean.Ssq" >
+    update ssq
+    set code = #{code,jdbcType=VARCHAR},
+      r1 = #{r1,jdbcType=VARCHAR},
+      r2 = #{r2,jdbcType=VARCHAR},
+      r3 = #{r3,jdbcType=VARCHAR},
+      r4 = #{r4,jdbcType=VARCHAR},
+      r5 = #{r5,jdbcType=VARCHAR},
+      r6 = #{r6,jdbcType=VARCHAR},
+      b1 = #{b1,jdbcType=VARCHAR},
+      b2 = #{b2,jdbcType=VARCHAR},
+      sales = #{sales,jdbcType=VARCHAR},
+      poolmoney = #{poolmoney,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      type1_num = #{type1Num,jdbcType=VARCHAR},
+      type1_money = #{type1Money,jdbcType=VARCHAR},
+      type2_num = #{type2Num,jdbcType=VARCHAR},
+      type2_money = #{type2Money,jdbcType=VARCHAR},
+      type3_num = #{type3Num,jdbcType=VARCHAR},
+      type3_money = #{type3Money,jdbcType=VARCHAR},
+      lottery_date = #{lotteryDate,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, type1_num, 
+    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+    from ssq
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, type1_num, 
+    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+    from ssq
+  </select>
+  <insert id="batchInsert" parameterType="java.util.List" >
+    <selectKey resultType ="java.lang.Integer" keyProperty= "id"
+               order= "AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey >
+    insert into ssq (code, r1, r2,
+    r3, r4, r5, r6,
+    b1, b2, sales, poolmoney,
+    content, type1_num, type1_money,
+    type2_num, type2_money, type3_num,
+    type3_money, lottery_date)
+    values
+    <foreach collection ="list" item="item" index= "index" separator =",">
+      (#{item.code,jdbcType=VARCHAR}, #{item.r1,jdbcType=INTEGER}, #{item.r2,jdbcType=INTEGER},
+      #{item.r3,jdbcType=INTEGER}, #{item.r4,jdbcType=INTEGER}, #{item.r5,jdbcType=INTEGER}, #{item.r6,jdbcType=INTEGER},
+      #{item.b1,jdbcType=INTEGER}, #{item.b2,jdbcType=INTEGER}, #{item.sales,jdbcType=INTEGER}, #{item.poolmoney,jdbcType=INTEGER},
+      #{item.content,jdbcType=VARCHAR}, #{item.type1Num,jdbcType=INTEGER}, #{item.type1Money,jdbcType=INTEGER},
+      #{item.type2Num,jdbcType=INTEGER}, #{item.type2Money,jdbcType=INTEGER}, #{item.type3Num,jdbcType=INTEGER},
+      #{item.type3Money,jdbcType=INTEGER}, #{item.lotteryDate,jdbcType=DATE})
+    </foreach >
+
+
+  </insert>
+
+  <select id="countByRedNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from ssq where r1=#{0} or r2=#{0} or r3=#{0} or r4=#{0} or r5=#{0} or r6=#{0}
+  </select>
+  <select id="countByBlueNum" resultType="java.lang.Integer">
+    SELECT t.b1 FROM (select COUNT(*) cnt,b1 from ssq group by b1) t ORDER BY t.cnt ${sort}
+  </select>
+
+  <select id="countByBlueNum2" resultType="java.util.Map">
+    select b1 ball,COUNT(*) cnt from ssq group by b1
+  </select>
+
+  <select id="exists" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from ssq where r1=#{r1} and r2=#{r2} and r3=#{r3} and r4=#{r4} and r5=#{r5} and r6=#{r6}
+  </select>
+
+  <select id="history" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, type1_num,
+    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+     from ssq order by code desc limit #{0}
+  </select>
+
+  <select id="countByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from ssq where code = #{code}
+  </select>
+
+</mapper>

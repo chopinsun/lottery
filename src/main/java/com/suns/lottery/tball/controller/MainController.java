@@ -2,17 +2,14 @@ package com.suns.lottery.tball.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.LotteryService;
-import com.suns.lottery.tball.bean.Lottery;
+import com.suns.lottery.tball.bean.Ssq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 /**
  * @title: lottery-tball
@@ -36,6 +33,12 @@ public class MainController {
     @RequestMapping("/pullData")
     public String pulldate(){
 //        lotteryService.pullAllData();
+        return "done!";
+    }
+
+    @RequestMapping("/pullAllDLTData")
+    public String pullDLTdate(){
+        lotteryService.pullAllDLTData();
         return "done!";
     }
 
@@ -75,7 +78,7 @@ public class MainController {
 
     @ResponseBody
     @RequestMapping("/history")
-    public List<Lottery> history(Integer n){
+    public List<Ssq> history(Integer n){
         return lotteryService.history(n);
     }
 

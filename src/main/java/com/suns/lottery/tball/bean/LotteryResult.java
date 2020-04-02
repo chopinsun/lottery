@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -44,8 +42,8 @@ public class LotteryResult {
     private List<Prizegrade> prizegrades;
 
 
-    public Lottery convert(){
-        Lottery lottery = new Lottery();
+    public Ssq convert(){
+        Ssq lottery = new Ssq();
         lottery.setCode(this.code);
         lottery.setLotteryDate(Date.from(LocalDate.parse(this.date.substring(0,10),DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
         String[] red = this.red.split(",");

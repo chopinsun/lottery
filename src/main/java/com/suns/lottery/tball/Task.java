@@ -3,7 +3,7 @@ package com.suns.lottery.tball;
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.HistoryData;
 import com.suns.lottery.tball.bean.LotteryResult;
-import com.suns.lottery.tball.mapper.LotteryMapper;
+import com.suns.lottery.tball.mapper.SsqMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class Task {
     private HttpInvoker httpInvoker;
 
     @Autowired
-    private LotteryMapper lotteryMapper;
+    private SsqMapper ssqMapper;
 
 
     private final static Integer rowNum=2;//定期拉取行数
@@ -68,10 +68,10 @@ public class Task {
         if(response.getState() ==0){
             List<LotteryResult> result = response.getResult();
             result.stream().forEach(x->{
-                int exists = lotteryMapper.countByCode(x.getCode());
+                int exists = ssqMapper.countByCode(x.getCode());
                 if(exists == 0){
                     log.info("是新数据，执行插入:{}",JSONObject.toJSONString(x));
-                    lotteryMapper.insert(x.convert());
+                    ssqMapper.insert(x.convert());
                 }
             });
 
