@@ -35,9 +35,9 @@ public class Dlt {
 
     private Integer b2;
 
-    private String sales;
+    private Integer sales;
 
-    private String poolmoney;
+    private Integer poolmoney;
 
     private String content;
 

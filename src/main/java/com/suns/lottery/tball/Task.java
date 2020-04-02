@@ -1,11 +1,19 @@
 package com.suns.lottery.tball;
 
 import com.alibaba.fastjson.JSONObject;
+import com.suns.lottery.tball.bean.Dlt;
 import com.suns.lottery.tball.bean.HistoryData;
 import com.suns.lottery.tball.bean.LotteryResult;
+import com.suns.lottery.tball.bean.Ssq;
+import com.suns.lottery.tball.mapper.DltMapper;
 import com.suns.lottery.tball.mapper.SsqMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
+import com.suns.lottery.tball.utils.NumberUtils;
 import lombok.extern.log4j.Log4j2;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,6 +21,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +41,14 @@ public class Task {
     @Autowired
     private SsqMapper ssqMapper;
 
+    @Autowired
+    private DltMapper dltMapper;
+
 
     private final static Integer rowNum=2;//定期拉取行数
 
     /**
-     * @Description: 定时同步最新数据
+     * @Description: 定时同步 双色球 最新数据
      * @param null
      * @return:
      *
@@ -44,7 +60,7 @@ public class Task {
      *
      **/
     @Scheduled(cron = "0 30 21 * * 2,4,7")
-    public void upateData(){
+    public void upateSSqData(){
         log.info("------------启动定时任务，拉取最新一期数据-----------");
         HttpHeaders headers  = new HttpHeaders();
         headers.add("X-Requested-With","XMLHttpRequest");
@@ -75,6 +91,60 @@ public class Task {
                 }
             });
 
+        }
+    }
+
+    /**
+     * @Description: 定时同步 大乐透 最新数据
+     * @param null
+     * @return:
+     *
+     * @Creator: sunxiaobo
+     * @Date: 2020/1/14 19:46
+     *
+     * @Modify: sunxiaobo
+     * @Date: 2020/1/14 19:46
+     *
+     **/
+    @Scheduled(cron = "0 0 21 * * 1,3,6")
+    public void upateDltData(){
+        log.info("------------启动定时任务，拉取最新一期数据-----------");
+        HttpHeaders headers  = new HttpHeaders();
+        try {
+            Document doc = Jsoup.connect("http://www.lottery.gov.cn/historykj/history.jspx?page=false&_ltype=dlt&termNum="+ rowNum).get();
+            Elements content = doc.select(".result tbody tr");//获取id为content的dom节点
+            List<Dlt> list = new ArrayList<>();
+            //遍历所有的a标签
+            for (Element link : content) {
+                Elements tds = link.children();
+                Dlt item = Dlt.builder()
+                        .code(tds.get(0).text())
+                        .r1(Integer.valueOf(tds.get(1).text()))
+                        .r2(Integer.valueOf(tds.get(2).text()))
+                        .r3(Integer.valueOf(tds.get(3).text()))
+                        .r4(Integer.valueOf(tds.get(4).text()))
+                        .r5(Integer.valueOf(tds.get(5).text()))
+                        .b1(Integer.valueOf(tds.get(6).text()))
+                        .b2(Integer.valueOf(tds.get(7).text()))
+                        .type1Num(NumberUtils.parseInt(tds.get(8).text()))
+                        .type1Money(NumberUtils.parseInt(tds.get(9).text()))
+                        .type2Num(NumberUtils.parseInt(tds.get(12).text()))
+                        .type2Money(NumberUtils.parseInt(tds.get(13).text()))
+                        .poolmoney(NumberUtils.parseInt(tds.get(18).text()))
+                        .sales(NumberUtils.parseInt(tds.get(17).text()))
+                        .lotteryDate(Date.from(LocalDate.parse(tds.get(19).text(), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
+                        .build();
+                list.add(item);
+            }
+            list.stream().forEach(x->{
+                int exists = ssqMapper.countByCode(x.getCode());
+                if(exists == 0){
+                    log.info("是新数据，执行插入:{}",JSONObject.toJSONString(x));
+                    dltMapper.insert(x);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
