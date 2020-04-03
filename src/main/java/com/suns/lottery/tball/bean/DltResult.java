@@ -31,7 +31,7 @@ public class DltResult {
         return Dlt.builder()
                 .code(this.num)
                 .lotteryDate(this.date_publish)
-                .poolmoney(this.money)
+                .poolmoney(Integer.valueOf(this.money))
                 .r1(Integer.valueOf(this.one))
                 .r2(Integer.valueOf(this.two))
                 .r3(Integer.valueOf(this.three))

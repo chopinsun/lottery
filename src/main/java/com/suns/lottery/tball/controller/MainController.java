@@ -1,7 +1,7 @@
 package com.suns.lottery.tball.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.suns.lottery.tball.LotteryService;
+import com.suns.lottery.tball.SsqService;
 import com.suns.lottery.tball.bean.Ssq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import java.util.Set;
 @RequestMapping("lottery")
 public class MainController {
     @Autowired
-    private LotteryService lotteryService;
+    private SsqService ssqService;
 
 
     @RequestMapping
@@ -38,21 +38,21 @@ public class MainController {
 
     @RequestMapping("/pullAllDLTData")
     public String pullDLTdate(){
-        lotteryService.pullAllDLTData();
+        ssqService.pullAllData();
         return "done!";
     }
 
     @ResponseBody
     @RequestMapping("/generate/min")
     public Set<List<Integer>> generateMin(Integer n){
-        Set<List<Integer>> list = lotteryService.generateNumByMin(n);
+        Set<List<Integer>> list = ssqService.generateNumByMin(n);
         return list;
     }
 
     @ResponseBody
     @RequestMapping("/generate/max")
     public List<String> generateMax(Integer n){
-        List<String> list = lotteryService.generateNumByMax(n);
+        List<String> list = ssqService.generateNumByMax(n);
         return list;
     }
 
@@ -60,7 +60,7 @@ public class MainController {
     @ResponseBody
     @RequestMapping("/generate/mix")
     public Set<List<Integer>> generateMix(Integer n){
-        Set<List<Integer>> list = lotteryService.generateNumByMix(n);
+        Set<List<Integer>> list = ssqService.generateNumByMix(n);
         return list;
     }
 
@@ -70,8 +70,8 @@ public class MainController {
     public JSONObject count(){
         JSONObject result = new JSONObject();
 
-        result.put("redBall",lotteryService.redBallCount());
-        result.put("blueBall",lotteryService.blueBallCount());
+        result.put("redBall", ssqService.redBallCount());
+        result.put("blueBall", ssqService.blueBallCount());
 
         return result;
     }
@@ -79,7 +79,7 @@ public class MainController {
     @ResponseBody
     @RequestMapping("/history")
     public List<Ssq> history(Integer n){
-        return lotteryService.history(n);
+        return ssqService.history(n);
     }
 
 }
