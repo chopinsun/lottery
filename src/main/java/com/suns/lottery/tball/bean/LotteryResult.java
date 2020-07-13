@@ -64,6 +64,18 @@ public class LotteryResult {
         lottery.setType2Num(prizegrades.get(1).getTypenum());
         lottery.setType3Money(prizegrades.get(2).getTypemoney());
         lottery.setType3Num(prizegrades.get(2).getTypenum());
+        if(prizegrades.size()>3){
+            lottery.setType4Money(prizegrades.get(4).getTypemoney());
+            lottery.setType4Num(prizegrades.get(4).getTypenum());
+        }
+        if(prizegrades.size()>4){
+            lottery.setType4Money(prizegrades.get(5).getTypemoney());
+            lottery.setType4Num(prizegrades.get(5).getTypenum());
+        }
+        if(prizegrades.size()>5){
+            lottery.setType4Money(prizegrades.get(6).getTypemoney());
+            lottery.setType4Num(prizegrades.get(6).getTypenum());
+        }
 
         return lottery;
     }

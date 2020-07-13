@@ -1,6 +1,7 @@
 package com.suns.lottery.tball.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.suns.lottery.tball.DltService;
 import com.suns.lottery.tball.SsqService;
 import com.suns.lottery.tball.bean.Ssq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ import java.util.Set;
 public class MainController {
     @Autowired
     private SsqService ssqService;
+
+    @Autowired
+    private DltService dltService;
 
 
     @RequestMapping

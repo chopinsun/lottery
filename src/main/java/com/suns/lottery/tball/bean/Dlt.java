@@ -53,6 +53,30 @@ public class Dlt {
 
     private Integer type3Money;
 
+    private Integer type4Num;
+
+    private Integer type4Money;
+
+    private Integer type5Num;
+
+    private Integer type5Money;
+
+    private Integer type6Num;
+
+    private Integer type6Money;
+
+    private Integer type7Num;
+
+    private Integer type7Money;
+
+    private Integer type8Num;
+
+    private Integer type8Money;
+
+    private Integer type9Num;
+
+    private Integer type9Money;
+
     private Integer seq;
 
     private String lotteryTimestamp;

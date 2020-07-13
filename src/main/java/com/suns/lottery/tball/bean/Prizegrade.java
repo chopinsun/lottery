@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Prizegrade {
 
     private Integer type;
-    private Integer typenum;
-    private Integer typemoney;
+    private String typenum;
+    private String typemoney;
 
 }

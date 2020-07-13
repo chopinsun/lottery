@@ -41,17 +41,29 @@ public class Ssq {
 
     private String content;
 
-    private Integer type1Num;
+    private String type1Num;
 
-    private Integer type1Money;
+    private String type1Money;
 
-    private Integer type2Num;
+    private String type2Num;
 
-    private Integer type2Money;
+    private String type2Money;
 
-    private Integer type3Num;
+    private String type3Num;
 
-    private Integer type3Money;
+    private String type3Money;
+
+    private String type4Num;
+
+    private String type4Money;
+
+    private String type5Num;
+
+    private String type5Money;
+
+    private String type6Num;
+
+    private String type6Money;
 
     @JSONField(format = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")

@@ -16,6 +16,8 @@ public interface SsqMapper {
 
     List<Ssq> selectAll();
 
+    List<Ssq> selectLastRecode();
+
     int updateByPrimaryKey(Ssq record);
 
     int countByRedNum(int num);
