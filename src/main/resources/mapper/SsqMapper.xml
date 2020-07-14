@@ -15,12 +15,6 @@
       <result column="sales" jdbcType="INTEGER" javaType="java.lang.Integer" property="sales"/>
       <result column="poolmoney" jdbcType="INTEGER" javaType="java.lang.Integer" property="poolmoney"/>
       <result column="content" jdbcType="VARCHAR" javaType="java.lang.String" property="content"/>
-      <result column="type1_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Num"/>
-      <result column="type1_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Money"/>
-      <result column="type2_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Num"/>
-      <result column="type2_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Money"/>
-      <result column="type3_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Num"/>
-      <result column="type3_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Money"/>
       <result column="lottery_date" jdbcType="DATE" javaType="java.util.Date" property="lotteryDate"/>
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

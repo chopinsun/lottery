@@ -3,6 +3,7 @@ package com.suns.lottery.tball;
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.*;
 import com.suns.lottery.tball.mapper.DltMapper;
+import com.suns.lottery.tball.mapper.SsqDetailMapper;
 import com.suns.lottery.tball.mapper.SsqMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
 import com.suns.lottery.tball.utils.NumberUtils;
@@ -37,6 +38,8 @@ public class TaskSsq {
 
     @Autowired
     private SsqMapper ssqMapper;
+    @Autowired
+    private SsqDetailMapper ssqDetailMapper;
 
 
     /**
@@ -66,7 +69,9 @@ public class TaskSsq {
                 int exists = ssqMapper.countByCode(x.getCode());
                 if(exists == 0){
                     log.info("是新数据，执行插入:{}",JSONObject.toJSONString(x));
-                    ssqMapper.insert(x.convert());
+                    Ssq ssq = x.convert();
+                    ssqMapper.insert(ssq);
+                    ssqDetailMapper.batchInsert(ssq.getSsqDetail());
                 }
             });
         }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suns.lottery.tball.mapper.SsqMapper" >
+  <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.SsqDetail" >
+    <result column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+    <result column="code" jdbcType="VARCHAR" javaType="java.lang.String" property="code"/>
+    <result column="level" jdbcType="VARCHAR" javaType="java.lang.String" property="level"/>
+    <result column="level_name" jdbcType="VARCHAR" javaType="java.lang.String" property="levelName"/>
+    <result column="num" jdbcType="VARCHAR" javaType="java.lang.String" property="num"/>
+    <result column="money" jdbcType="VARCHAR" javaType="java.lang.String" property="money"/>
+    <result column="all_money" jdbcType="VARCHAR" javaType="java.lang.String" property="allMoney"/>
+  </resultMap>
+
+  <select id="findByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select * from ssq_detail where code = #{0}
+  </select>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    <selectKey resultType ="java.lang.Integer" keyProperty= "id" order= "AFTER"> SELECT LAST_INSERT_ID()  </selectKey >
+
+    insert into ssq_detail(id,code,`level`,num,money)
+    values
+        <foreach collection="list" item="item" index= "index" separator =",">
+        (
+          #{item.id},
+          #{item.code},
+          #{item.level},
+          #{item.levelName},
+          #{item.num},
+          #{item.money},
+          #{item.allMoney}
+          )
+        </foreach>
+  </insert>
+
+</mapper>

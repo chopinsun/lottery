@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -41,33 +42,11 @@ public class Ssq {
 
     private String content;
 
-    private String type1Num;
-
-    private String type1Money;
-
-    private String type2Num;
-
-    private String type2Money;
-
-    private String type3Num;
-
-    private String type3Money;
-
-    private String type4Num;
-
-    private String type4Money;
-
-    private String type5Num;
-
-    private String type5Money;
-
-    private String type6Num;
-
-    private String type6Money;
-
     @JSONField(format = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date lotteryDate;
+
+    private List<SsqDetail> ssqDetail;
 
 }

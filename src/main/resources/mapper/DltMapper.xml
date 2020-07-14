@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suns.lottery.tball.mapper.DltMapper" >
-  <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.Ssq" >
+  <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.Dlt" >
       <result column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
       <result column="code" jdbcType="VARCHAR" javaType="java.lang.String" property="code"/>
       <result column="r1" jdbcType="INTEGER" javaType="java.lang.Integer" property="r1"/>
@@ -14,12 +14,6 @@
       <result column="sales" jdbcType="INTEGER" javaType="java.lang.Integer" property="sales"/>
       <result column="poolmoney" jdbcType="INTEGER" javaType="java.lang.Integer" property="poolmoney"/>
       <result column="content" jdbcType="VARCHAR" javaType="java.lang.String" property="content"/>
-      <result column="type1_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Num"/>
-      <result column="type1_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type1Money"/>
-      <result column="type2_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Num"/>
-      <result column="type2_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type2Money"/>
-      <result column="type3_num" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Num"/>
-      <result column="type3_money" jdbcType="INTEGER" javaType="java.lang.Integer" property="type3Money"/>
       <result column="lottery_date" jdbcType="DATE" javaType="java.util.Date" property="lotteryDate"/>
     <result column="lottery_timestamp" jdbcType="VARCHAR" javaType="java.lang.String" property="lotteryTimestamp"/>
     <result column="seq" jdbcType="INTEGER" javaType="java.lang.Integer" property="seq"/>
@@ -28,7 +22,7 @@
     delete from dlt
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.suns.lottery.tball.bean.Ssq" >
+  <insert id="insert" parameterType="com.suns.lottery.tball.bean.Dlt" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -45,7 +39,7 @@
       #{type2Num,jdbcType=INTEGER}, #{type2Money,jdbcType=INTEGER}, #{type3Num,jdbcType=INTEGER},
       #{type3Money,jdbcType=INTEGER}, #{lotteryDate,jdbcType=DATE},#{lotteryTimestamp,jdbcType=VARCHAR},#{seq,jdbcType=INTEGER})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.suns.lottery.tball.bean.Ssq" >
+  <update id="updateByPrimaryKey" parameterType="com.suns.lottery.tball.bean.Dlt" >
     update dlt
     set code = #{code,jdbcType=VARCHAR},
       r1 = #{r1,jdbcType=INTEGER},

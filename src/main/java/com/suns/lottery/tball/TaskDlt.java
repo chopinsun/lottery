@@ -2,6 +2,7 @@ package com.suns.lottery.tball;
 
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.*;
+import com.suns.lottery.tball.mapper.DltDetailMapper;
 import com.suns.lottery.tball.mapper.DltMapper;
 import com.suns.lottery.tball.mapper.SsqMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
@@ -41,6 +42,8 @@ public class TaskDlt {
 
     @Autowired
     private DltMapper dltMapper;
+    @Autowired
+    private DltDetailMapper dltDetailMapper;
 
     /**
      * @Description: 定时同步 大乐透 最新数据
@@ -67,7 +70,9 @@ public class TaskDlt {
                     int exists = dltMapper.countByCode(x.getLottery().getTerm());
                     if(exists == 0){
                         log.info("是新数据，执行插入:{}",JSONObject.toJSONString(x));
-                        dltMapper.insert(x.convert());
+                        Dlt dlt= x.convert();
+                        dltMapper.insert(dlt);
+                        dltDetailMapper.batchInsert(dlt.getDltDetail());
                     }
                 });
     }

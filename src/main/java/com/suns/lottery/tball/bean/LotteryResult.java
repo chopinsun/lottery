@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @title: lottery-tball
@@ -43,41 +45,38 @@ public class LotteryResult {
 
 
     public Ssq convert(){
-        Ssq lottery = new Ssq();
-        lottery.setCode(this.code);
-        lottery.setLotteryDate(Date.from(LocalDate.parse(this.date.substring(0,10),DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
         String[] red = this.red.split(",");
-        lottery.setR1(Integer.valueOf(red[0]));
-        lottery.setR2(Integer.valueOf(red[1]));
-        lottery.setR3(Integer.valueOf(red[2]));
-        lottery.setR4(Integer.valueOf(red[3]));
-        lottery.setR5(Integer.valueOf(red[4]));
-        lottery.setR6(Integer.valueOf(red[5]));
-        lottery.setB1(Integer.valueOf(this.blue));
-        lottery.setPoolmoney(Integer.valueOf(this.poolmoney));
-        lottery.setContent(this.content);
-        lottery.setSales(Integer.valueOf(this.sales));
-        List<Prizegrade> prizegrades = this.prizegrades;
-        lottery.setType1Money(prizegrades.get(0).getTypemoney());
-        lottery.setType1Num(prizegrades.get(0).getTypenum());
-        lottery.setType2Money(prizegrades.get(1).getTypemoney());
-        lottery.setType2Num(prizegrades.get(1).getTypenum());
-        lottery.setType3Money(prizegrades.get(2).getTypemoney());
-        lottery.setType3Num(prizegrades.get(2).getTypenum());
-        if(prizegrades.size()>3){
-            lottery.setType4Money(prizegrades.get(4).getTypemoney());
-            lottery.setType4Num(prizegrades.get(4).getTypenum());
-        }
-        if(prizegrades.size()>4){
-            lottery.setType4Money(prizegrades.get(5).getTypemoney());
-            lottery.setType4Num(prizegrades.get(5).getTypenum());
-        }
-        if(prizegrades.size()>5){
-            lottery.setType4Money(prizegrades.get(6).getTypemoney());
-            lottery.setType4Num(prizegrades.get(6).getTypenum());
-        }
+        Ssq lottery = Ssq.builder()
+                .code(this.code)
+                .lotteryDate(Date.from(LocalDate.parse(this.date.substring(0,10),DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
+                .r1(Integer.valueOf(red[0]))
+                .r2(Integer.valueOf(red[1]))
+                .r3(Integer.valueOf(red[2]))
+                .r4(Integer.valueOf(red[3]))
+                .r5(Integer.valueOf(red[4]))
+                .r6(Integer.valueOf(red[5]))
+                .b1(Integer.valueOf(this.blue))
+                .poolmoney(Integer.valueOf(this.poolmoney))
+                .content(this.content)
+                .sales(Integer.valueOf(this.sales))
+                .build();
 
+        List<SsqDetail> details = IntStream.range(0,this.prizegrades.size()).mapToObj(i->i).map(i->SsqDetail.builder()
+                .code(this.code)
+                .level(i)
+                .levelName(intToHz(i)+"等奖")
+                .num(Integer.valueOf(prizegrades.get(i).getTypenum()))
+                .money(Integer.valueOf(prizegrades.get(i).getTypemoney()))
+                .allMoney(Long.valueOf(prizegrades.get(i).getTypenum()) * Long.valueOf(prizegrades.get(i).getTypemoney()))
+                .build())
+                .collect(Collectors.toList());
+        lottery.setSsqDetail(details);
         return lottery;
+    }
+
+    private String intToHz(Integer i){
+        String[] s = {"零","一","二","三","四","五","六","七","八","九","十"};
+        return s[i];
     }
 
 }
