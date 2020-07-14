@@ -61,6 +61,10 @@ public class TaskSsq {
         String lastCode = remoteLastCode();
         String dbLastCode = dbLastCodeSsq();
         Integer num = Integer.valueOf(lastCode) - Integer.valueOf(dbLastCode);
+        if(num == 0){
+            log.info("已是最新数据，不做更新");
+            return;
+        }
         //按照计算结果，把差的数据同步回来
         HistoryData response = historyData(num);
         if(response.getState() ==0){
