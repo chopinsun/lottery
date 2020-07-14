@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.Dlt;
 import com.suns.lottery.tball.bean.DltResult;
 import com.suns.lottery.tball.bean.Ssq;
+import com.suns.lottery.tball.bean.SsqDetail;
 import com.suns.lottery.tball.common.Constants;
 import com.suns.lottery.tball.common.Sort;
 import com.suns.lottery.tball.mapper.DltMapper;
+import com.suns.lottery.tball.mapper.SsqDetailMapper;
 import com.suns.lottery.tball.mapper.SsqMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
 import com.suns.lottery.tball.utils.NumberUtils;
@@ -47,6 +49,8 @@ public class SsqService {
     @Autowired
     private SsqMapper ssqMapper;
     @Autowired
+    private SsqDetailMapper ssqDetailMapper;
+    @Autowired
     private RestTemplate template;
 
 
@@ -67,7 +71,7 @@ public class SsqService {
 
         try {
             Document doc = Jsoup.connect("http://datachart.500.com/ssq/history/newinc/history.php?start=03001&end=20005").get();
-            Elements content = doc.getElementsByClass("t_tr1");//获取id为content的dom节点
+            Elements content = doc.getElementById("tdata").children();//获取id为content的dom节点
             List<Ssq> list = new ArrayList<>();
             //遍历所有的a标签
             for (Element link : content) {
@@ -81,17 +85,32 @@ public class SsqService {
                         .r5(Integer.valueOf(tds.get(5).text()))
                         .r6(Integer.valueOf(tds.get(6).text()))
                         .b1(Integer.valueOf(tds.get(7).text()))
-                        .poolmoney(NumberUtils.parseInt(tds.get(9).text()))
-                        .type1Num(NumberUtils.parseInt(tds.get(10).text()))
-                        .type1Money(NumberUtils.parseInt(tds.get(11).text()))
-                        .type2Num(NumberUtils.parseInt(tds.get(12).text()))
-                        .type2Money(NumberUtils.parseInt(tds.get(13).text()))
-                        .sales(NumberUtils.parseInt(tds.get(14).text()))
+                        .poolmoney(NumberUtils.parseLong(tds.get(9).text()))
+                        .sales(NumberUtils.parseLong(tds.get(14).text()))
                         .lotteryDate(Date.from(LocalDate.parse(tds.get(15).text(), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
                         .build();
+                SsqDetail d1 = SsqDetail.builder()
+                        .code(tds.get(0).text())
+                        .level(1)
+                        .levelName("一等奖")
+                        .num(NumberUtils.parseInt(tds.get(10).text()))
+                        .money(NumberUtils.parseInt(tds.get(11).text()))
+                        .allMoney(NumberUtils.parseInt(tds.get(10).text()) * Long.valueOf(NumberUtils.parseInt(tds.get(11).text())))
+                        .build();
+
+                SsqDetail d2 = SsqDetail.builder()
+                        .code(tds.get(0).text())
+                        .level(2)
+                        .levelName("二等奖")
+                        .num(NumberUtils.parseInt(tds.get(12).text()))
+                        .money(NumberUtils.parseInt(tds.get(13).text()))
+                        .allMoney(NumberUtils.parseInt(tds.get(12).text()) * Long.valueOf(NumberUtils.parseInt(tds.get(13).text())))
+                        .build();
                 list.add(item);
+                ssqDetailMapper.batchInsert(Arrays.asList(d1,d2));
             }
             ssqMapper.batchInsert(list);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -23,5 +23,5 @@ public class DltDetail {
     private String levelName;
     private Integer num ;
     private Integer money ;
-    private Integer allMoney ;
+    private Long allMoney ;
 }

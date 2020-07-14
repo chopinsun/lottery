@@ -3,10 +3,12 @@ package com.suns.lottery.tball;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.Dlt;
-import com.suns.lottery.tball.bean.DltResult;
-import com.suns.lottery.tball.bean.Ssq;
+
+import com.suns.lottery.tball.bean.DltDetail;
+import com.suns.lottery.tball.bean.SsqDetail;
 import com.suns.lottery.tball.common.Constants;
 import com.suns.lottery.tball.common.Sort;
+import com.suns.lottery.tball.mapper.DltDetailMapper;
 import com.suns.lottery.tball.mapper.DltMapper;
 import com.suns.lottery.tball.utils.HttpInvoker;
 import com.suns.lottery.tball.utils.NumberUtils;
@@ -17,13 +19,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -47,7 +44,8 @@ public class DltService {
     private HttpInvoker httpInvoker;
     @Autowired
     private DltMapper dltMapper;
-    
+    @Autowired
+    private DltDetailMapper dltDetailMapper;
 
     /**
      * @Description: 一次性拉取大乐透所有历史数据
@@ -62,28 +60,52 @@ public class DltService {
      *
      **/
     public void pullAllData(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        List<Dlt> list = new ArrayList<>();
-        IntStream.range(1,131).forEach(n->{
-            MultiValueMap<String, Object> body= new LinkedMultiValueMap<>();
-            body.add("current_page",n);
-            body.add("all_count",1946);
-            try {
-                JSONObject response = httpInvoker.post("https://www.js-lottery.com/PlayZone/ajaxLottoData?current_page={}&all_count={}", JSONObject.class,new HttpEntity(body,headers),new LinkedMultiValueMap());
-                if(response!=null && response.getBoolean("result")){
-                    JSONArray items = response.getJSONArray("items");
-                    log.info(items.toJSONString());
-                    for (int i = 0; i < items.size(); i++) {
-                        DltResult r = items.getObject(i,DltResult.class);
-                        list.add(r.convert());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        HttpHeaders headers  = new HttpHeaders();
+
+        try {
+            Document doc = Jsoup.connect("http://datachart.500.com/dlt/history/newinc/history.php?start=07002&end=20062").get();
+            Elements content = doc.getElementById("tdata").children();//获取id为tdata的tbody下的tr
+            List<Dlt> list = new ArrayList<>();
+            //遍历所有的a标签
+            for (Element link : content) {
+                Elements tds = link.children();
+                Dlt item = Dlt.builder()
+                        .code(tds.get(0).text())
+                        .r1(Integer.valueOf(tds.get(1).text()))
+                        .r2(Integer.valueOf(tds.get(2).text()))
+                        .r3(Integer.valueOf(tds.get(3).text()))
+                        .r4(Integer.valueOf(tds.get(4).text()))
+                        .r5(Integer.valueOf(tds.get(5).text()))
+                        .b1(Integer.valueOf(tds.get(6).text()))
+                        .b2(Integer.valueOf(tds.get(7).text()))
+                        .poolmoney(NumberUtils.parseLong(tds.get(8).text()))
+                        .sales(NumberUtils.parseLong(tds.get(13).text()))
+                        .lotteryDate(Date.from(LocalDate.parse(tds.get(14).text(), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
+                        .build();
+                DltDetail d1 = DltDetail.builder()
+                        .code(tds.get(0).text())
+                        .level(1)
+                        .levelName("一等奖")
+                        .num(NumberUtils.parseInt(tds.get(9).text()))
+                        .money(NumberUtils.parseInt(tds.get(10).text()))
+                        .allMoney(NumberUtils.parseInt(tds.get(9).text()) * Long.valueOf(NumberUtils.parseInt(tds.get(10).text())))
+                        .build();
+
+                DltDetail d2 = DltDetail.builder()
+                        .code(tds.get(0).text())
+                        .level(2)
+                        .levelName("二等奖")
+                        .num(NumberUtils.parseInt(tds.get(11).text()))
+                        .money(NumberUtils.parseInt(tds.get(12).text()))
+                        .allMoney(NumberUtils.parseInt(tds.get(11).text()) * Long.valueOf(NumberUtils.parseInt(tds.get(12).text())))
+                        .build();
+                list.add(item);
+                dltDetailMapper.batchInsert(Arrays.asList(d1,d2));
             }
-        });
-        dltMapper.batchInsert(list);
+            dltMapper.batchInsert(list);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

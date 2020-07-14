@@ -1,9 +1,11 @@
 package com.suns.lottery.tball.bean;
 
+import com.suns.lottery.tball.utils.NumberUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -56,18 +58,18 @@ public class LotteryResult {
                 .r5(Integer.valueOf(red[4]))
                 .r6(Integer.valueOf(red[5]))
                 .b1(Integer.valueOf(this.blue))
-                .poolmoney(Integer.valueOf(this.poolmoney))
+                .poolmoney(NumberUtils.parseLong(this.poolmoney))
                 .content(this.content)
-                .sales(Integer.valueOf(this.sales))
+                .sales(NumberUtils.parseLong(this.sales))
                 .build();
 
         List<SsqDetail> details = IntStream.range(0,this.prizegrades.size()).mapToObj(i->i).map(i->SsqDetail.builder()
                 .code(this.code)
                 .level(i)
                 .levelName(intToHz(i)+"等奖")
-                .num(Integer.valueOf(prizegrades.get(i).getTypenum()))
-                .money(Integer.valueOf(prizegrades.get(i).getTypemoney()))
-                .allMoney(Long.valueOf(prizegrades.get(i).getTypenum()) * Long.valueOf(prizegrades.get(i).getTypemoney()))
+                .num(StringUtils.isNotBlank(prizegrades.get(i).getTypenum())?Integer.valueOf(prizegrades.get(i).getTypenum()):0)
+                .money(StringUtils.isNotBlank(prizegrades.get(i).getTypemoney())?Integer.valueOf(prizegrades.get(i).getTypemoney()):0)
+                .allMoney(StringUtils.isNotBlank(prizegrades.get(i).getTypenum()) && StringUtils.isNotBlank(prizegrades.get(i).getTypemoney()) ?Long.valueOf(prizegrades.get(i).getTypenum()) * Long.valueOf(prizegrades.get(i).getTypemoney()):0)
                 .build())
                 .collect(Collectors.toList());
         lottery.setSsqDetail(details);

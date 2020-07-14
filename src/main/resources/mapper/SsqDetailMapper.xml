@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.suns.lottery.tball.mapper.SsqMapper" >
+<mapper namespace="com.suns.lottery.tball.mapper.SsqDetailMapper" >
   <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.SsqDetail" >
     <result column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
     <result column="code" jdbcType="VARCHAR" javaType="java.lang.String" property="code"/>
@@ -18,7 +18,7 @@
   <insert id="batchInsert" parameterType="java.util.List">
     <selectKey resultType ="java.lang.Integer" keyProperty= "id" order= "AFTER"> SELECT LAST_INSERT_ID()  </selectKey >
 
-    insert into ssq_detail(id,code,`level`,num,money)
+    insert into ssq_detail(id,code,`level`,level_name,num,money,all_money)
     values
         <foreach collection="list" item="item" index= "index" separator =",">
         (

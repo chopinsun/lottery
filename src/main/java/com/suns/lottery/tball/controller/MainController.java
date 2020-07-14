@@ -34,14 +34,14 @@ public class MainController {
     }
 
     @ResponseBody
-    @RequestMapping("/pullData")
-    public String pulldate(){
-//        lotteryService.pullAllData();
+    @RequestMapping("/dlt/pullAllData")
+    public String pullDltdate(){
+        dltService.pullAllData();
         return "done!";
     }
 
-    @RequestMapping("/pullAllDLTData")
-    public String pullDLTdate(){
+    @RequestMapping("/ssq/pullAllData")
+    public String pullSsqdate(){
         ssqService.pullAllData();
         return "done!";
     }

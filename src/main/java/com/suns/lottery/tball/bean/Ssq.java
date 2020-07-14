@@ -36,9 +36,9 @@ public class Ssq {
 
     private String b2;
 
-    private Integer sales;
+    private Long sales;
 
-    private Integer poolmoney;
+    private Long poolmoney;
 
     private String content;
 

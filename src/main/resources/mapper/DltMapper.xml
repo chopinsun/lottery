@@ -11,12 +11,14 @@
       <result column="r5" jdbcType="INTEGER" javaType="java.lang.Integer" property="r5"/>
       <result column="b1" jdbcType="INTEGER" javaType="java.lang.Integer" property="b1"/>
       <result column="b2" jdbcType="INTEGER" javaType="java.lang.Integer" property="b2"/>
-      <result column="sales" jdbcType="INTEGER" javaType="java.lang.Integer" property="sales"/>
-      <result column="poolmoney" jdbcType="INTEGER" javaType="java.lang.Integer" property="poolmoney"/>
+      <result column="sales" jdbcType="BIGINT" javaType="java.lang.Long" property="sales"/>
+      <result column="poolmoney" jdbcType="BIGINT" javaType="java.lang.Long" property="poolmoney"/>
       <result column="content" jdbcType="VARCHAR" javaType="java.lang.String" property="content"/>
       <result column="lottery_date" jdbcType="DATE" javaType="java.util.Date" property="lotteryDate"/>
-    <result column="lottery_timestamp" jdbcType="VARCHAR" javaType="java.lang.String" property="lotteryTimestamp"/>
-    <result column="seq" jdbcType="INTEGER" javaType="java.lang.Integer" property="seq"/>
+      <result column="lottery_timestamp" jdbcType="VARCHAR" javaType="java.lang.String" property="lotteryTimestamp"/>
+      <result column="seq" jdbcType="INTEGER" javaType="java.lang.Integer" property="seq"/>
+      <result column="create_time" jdbcType="DATE" javaType="java.util.Date" property="createTime"/>
+      <result column="update_time" jdbcType="DATE" javaType="java.util.Date" property="updateTime"/>
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from dlt
@@ -29,15 +31,11 @@
     insert into dlt (code, r1, r2,
       r3, r4, r5,
       b1, b2, sales, poolmoney, 
-      content, type1_num, type1_money, 
-      type2_num, type2_money, type3_num, 
-      type3_money, lottery_date,lottery_timestamp,seq)
+      content, type1_num, lottery_date,lottery_timestamp,seq,create_time)
     values (#{code,jdbcType=VARCHAR}, #{r1,jdbcType=INTEGER}, #{r2,jdbcType=INTEGER},
       #{r3,jdbcType=INTEGER}, #{r4,jdbcType=INTEGER}, #{r5,jdbcType=INTEGER},
-      #{b1,jdbcType=INTEGER}, #{b2,jdbcType=INTEGER}, #{sales,jdbcType=VARCHAR}, #{poolmoney,jdbcType=VARCHAR},
-      #{content,jdbcType=VARCHAR}, #{type1Num,jdbcType=INTEGER}, #{type1Money,jdbcType=INTEGER},
-      #{type2Num,jdbcType=INTEGER}, #{type2Money,jdbcType=INTEGER}, #{type3Num,jdbcType=INTEGER},
-      #{type3Money,jdbcType=INTEGER}, #{lotteryDate,jdbcType=DATE},#{lotteryTimestamp,jdbcType=VARCHAR},#{seq,jdbcType=INTEGER})
+      #{b1,jdbcType=INTEGER}, #{b2,jdbcType=INTEGER}, #{sales,jdbcType=BIGINT}, #{poolmoney,jdbcType=BIGINT},
+      #{content,jdbcType=VARCHAR}, #{lotteryDate,jdbcType=DATE},#{lotteryTimestamp,jdbcType=VARCHAR},#{seq,jdbcType=INTEGER},now())
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.suns.lottery.tball.bean.Dlt" >
     update dlt
@@ -49,29 +47,22 @@
       r5 = #{r5,jdbcType=INTEGER},
       b1 = #{b1,jdbcType=INTEGER},
       b2 = #{b2,jdbcType=INTEGER},
-      sales = #{sales,jdbcType=VARCHAR},
-      poolmoney = #{poolmoney,jdbcType=VARCHAR},
+      sales = #{sales,jdbcType=BIGINT},
+      poolmoney = #{poolmoney,jdbcType=BIGINT},
       content = #{content,jdbcType=VARCHAR},
-      type1_num = #{type1Num,jdbcType=INTEGER},
-      type1_money = #{type1Money,jdbcType=INTEGER},
-      type2_num = #{type2Num,jdbcType=INTEGER},
-      type2_money = #{type2Money,jdbcType=INTEGER},
-      type3_num = #{type3Num,jdbcType=INTEGER},
-      type3_money = #{type3Money,jdbcType=INTEGER},
       lottery_date = #{lotteryDate,jdbcType=DATE},
       lottery_timestamp = #{lotteryTimestamp,jdbcType=VARCHAR},
       seq = #{seq,jdbcType=INTEGER}
+      update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select id, code, r1, r2, r3, r4, r5, b1, b2, sales, poolmoney, content, type1_num,
-    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date,lottery_timestamp,seq
+    select id, code, r1, r2, r3, r4, r5, b1, b2, sales, poolmoney, content, lottery_date,lottery_timestamp,seq,create_time,update_time
     from dlt
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, code, r1, r2, r3, r4, r5, b1, b2, sales, poolmoney, content, type1_num,
-    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date,lottery_timestamp,seq
+    select id, code, r1, r2, r3, r4, r5, b1, b2, sales, poolmoney, content, lottery_date,lottery_timestamp,seq,create_time,update_time
     from dlt
   </select>
   <insert id="batchInsert" parameterType="java.util.List" >
@@ -82,17 +73,13 @@
     insert into dlt (code, r1, r2,
     r3, r4, r5,
     b1, b2, sales, poolmoney,
-    content, type1_num, type1_money,
-    type2_num, type2_money, type3_num,
-    type3_money, lottery_date,lottery_timestamp,seq)
+    content, lottery_date,lottery_timestamp,seq,create_time)
     values
     <foreach collection ="list" item="item" index= "index" separator =",">
       (#{item.code,jdbcType=VARCHAR}, #{item.r1,jdbcType=INTEGER}, #{item.r2,jdbcType=INTEGER},
       #{item.r3,jdbcType=INTEGER}, #{item.r4,jdbcType=INTEGER}, #{item.r5,jdbcType=INTEGER},
-      #{item.b1,jdbcType=INTEGER}, #{item.b2,jdbcType=INTEGER}, #{item.sales,jdbcType=INTEGER}, #{item.poolmoney,jdbcType=INTEGER},
-      #{item.content,jdbcType=VARCHAR}, #{item.type1Num,jdbcType=INTEGER}, #{item.type1Money,jdbcType=INTEGER},
-      #{item.type2Num,jdbcType=INTEGER}, #{item.type2Money,jdbcType=INTEGER}, #{item.type3Num,jdbcType=INTEGER},
-      #{item.type3Money,jdbcType=INTEGER}, #{item.lotteryDate,jdbcType=DATE},#{item.lotteryTimestamp,jdbcType=VARCHAR},#{item.seq,jdbcType=INTEGER})
+      #{item.b1,jdbcType=INTEGER}, #{item.b2,jdbcType=INTEGER}, #{item.sales,jdbcType=BIGINT}, #{item.poolmoney,jdbcType=BIGINT},
+      #{item.content,jdbcType=VARCHAR}, #{item.lotteryDate,jdbcType=DATE},#{item.lotteryTimestamp,jdbcType=VARCHAR},#{item.seq,jdbcType=INTEGER},now())
     </foreach >
 
 
@@ -118,8 +105,7 @@
   </select>
 
   <select id="history" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, code, r1, r2, r3, r4, r5, b1, b2, sales, poolmoney, content, type1_num,
-    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+    select id, code, r1, r2, r3, r4, r5, b1, b2, sales, poolmoney, content, lottery_date,create_time,update_time
      from dlt order by code desc limit #{0}
   </select>
 

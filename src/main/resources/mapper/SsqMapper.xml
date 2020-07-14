@@ -12,10 +12,12 @@
       <result column="r6" jdbcType="INTEGER" javaType="java.lang.Integer" property="r6"/>
       <result column="b1" jdbcType="INTEGER" javaType="java.lang.Integer" property="b1"/>
       <result column="b2" jdbcType="INTEGER" javaType="java.lang.Integer" property="b2"/>
-      <result column="sales" jdbcType="INTEGER" javaType="java.lang.Integer" property="sales"/>
-      <result column="poolmoney" jdbcType="INTEGER" javaType="java.lang.Integer" property="poolmoney"/>
+      <result column="sales" jdbcType="BIGINT" javaType="java.lang.Long" property="sales"/>
+      <result column="poolmoney" jdbcType="BIGINT" javaType="java.lang.Long" property="poolmoney"/>
       <result column="content" jdbcType="VARCHAR" javaType="java.lang.String" property="content"/>
       <result column="lottery_date" jdbcType="DATE" javaType="java.util.Date" property="lotteryDate"/>
+      <result column="create_time" jdbcType="DATE" javaType="java.util.Date" property="createTime"/>
+      <result column="update_time" jdbcType="DATE" javaType="java.util.Date" property="updateTime"/>
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ssq
@@ -28,15 +30,11 @@
     insert into ssq (code, r1, r2,
       r3, r4, r5, r6, 
       b1, b2, sales, poolmoney, 
-      content, type1_num, type1_money, 
-      type2_num, type2_money, type3_num, 
-      type3_money, lottery_date)
+      content,lottery_date,create_time)
     values (#{code,jdbcType=VARCHAR}, #{r1,jdbcType=VARCHAR}, #{r2,jdbcType=VARCHAR}, 
       #{r3,jdbcType=VARCHAR}, #{r4,jdbcType=VARCHAR}, #{r5,jdbcType=VARCHAR}, #{r6,jdbcType=VARCHAR}, 
-      #{b1,jdbcType=VARCHAR}, #{b2,jdbcType=VARCHAR}, #{sales,jdbcType=VARCHAR}, #{poolmoney,jdbcType=VARCHAR}, 
-      #{content,jdbcType=VARCHAR}, #{type1Num,jdbcType=VARCHAR}, #{type1Money,jdbcType=VARCHAR}, 
-      #{type2Num,jdbcType=VARCHAR}, #{type2Money,jdbcType=VARCHAR}, #{type3Num,jdbcType=VARCHAR}, 
-      #{type3Money,jdbcType=VARCHAR}, #{lotteryDate,jdbcType=DATE})
+      #{b1,jdbcType=VARCHAR}, #{b2,jdbcType=VARCHAR}, #{sales,jdbcType=BIGINT}, #{poolmoney,jdbcType=BIGINT},
+      #{content,jdbcType=VARCHAR},  #{lotteryDate,jdbcType=DATE},now())
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.suns.lottery.tball.bean.Ssq" >
     update ssq
@@ -49,27 +47,20 @@
       r6 = #{r6,jdbcType=VARCHAR},
       b1 = #{b1,jdbcType=VARCHAR},
       b2 = #{b2,jdbcType=VARCHAR},
-      sales = #{sales,jdbcType=VARCHAR},
-      poolmoney = #{poolmoney,jdbcType=VARCHAR},
+      sales = #{sales,jdbcType=BIGINT},
+      poolmoney = #{poolmoney,jdbcType=BIGINT},
       content = #{content,jdbcType=VARCHAR},
-      type1_num = #{type1Num,jdbcType=VARCHAR},
-      type1_money = #{type1Money,jdbcType=VARCHAR},
-      type2_num = #{type2Num,jdbcType=VARCHAR},
-      type2_money = #{type2Money,jdbcType=VARCHAR},
-      type3_num = #{type3Num,jdbcType=VARCHAR},
-      type3_money = #{type3Money,jdbcType=VARCHAR},
-      lottery_date = #{lotteryDate,jdbcType=DATE}
+      lottery_date = #{lotteryDate,jdbcType=DATE},
+      update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, type1_num, 
-    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, lottery_date,create_time,update_time
     from ssq
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, type1_num, 
-    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, lottery_date,create_time,update_time
     from ssq
   </select>
   <insert id="batchInsert" parameterType="java.util.List" >
@@ -80,17 +71,13 @@
     insert into ssq (code, r1, r2,
     r3, r4, r5, r6,
     b1, b2, sales, poolmoney,
-    content, type1_num, type1_money,
-    type2_num, type2_money, type3_num,
-    type3_money, lottery_date)
+    content, lottery_date,create_time)
     values
     <foreach collection ="list" item="item" index= "index" separator =",">
       (#{item.code,jdbcType=VARCHAR}, #{item.r1,jdbcType=INTEGER}, #{item.r2,jdbcType=INTEGER},
       #{item.r3,jdbcType=INTEGER}, #{item.r4,jdbcType=INTEGER}, #{item.r5,jdbcType=INTEGER}, #{item.r6,jdbcType=INTEGER},
-      #{item.b1,jdbcType=INTEGER}, #{item.b2,jdbcType=INTEGER}, #{item.sales,jdbcType=INTEGER}, #{item.poolmoney,jdbcType=INTEGER},
-      #{item.content,jdbcType=VARCHAR}, #{item.type1Num,jdbcType=INTEGER}, #{item.type1Money,jdbcType=INTEGER},
-      #{item.type2Num,jdbcType=INTEGER}, #{item.type2Money,jdbcType=INTEGER}, #{item.type3Num,jdbcType=INTEGER},
-      #{item.type3Money,jdbcType=INTEGER}, #{item.lotteryDate,jdbcType=DATE})
+      #{item.b1,jdbcType=INTEGER}, #{item.b2,jdbcType=INTEGER}, #{item.sales,jdbcType=BIGINT}, #{item.poolmoney,jdbcType=BIGINT},
+      #{item.content,jdbcType=VARCHAR}, #{item.lotteryDate,jdbcType=DATE},now())
     </foreach >
 
 
@@ -112,8 +99,7 @@
   </select>
 
   <select id="history" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, type1_num,
-    type1_money, type2_num, type2_money, type3_num, type3_money, lottery_date
+    select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content,lottery_date,create_time,update_time
      from ssq order by code desc limit #{0}
   </select>
 

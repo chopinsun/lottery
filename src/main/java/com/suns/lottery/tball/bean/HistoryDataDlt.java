@@ -1,5 +1,6 @@
 package com.suns.lottery.tball.bean;
 
+import com.suns.lottery.tball.utils.NumberUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,7 +44,7 @@ public class HistoryDataDlt {
                     .r5(Integer.valueOf(codeNumber.get(4)))
                     .b1(Integer.valueOf(codeNumber.get(5)))
                     .b2(Integer.valueOf(codeNumber.get(6)))
-                    .sales(Integer.valueOf(lottery.getTotalSales().replaceAll(",","")))
+                    .sales(NumberUtils.parseLong(lottery.getTotalSales()))
                     .lotteryTimestamp(String.valueOf(lottery.getOpenTime().getTime()))
                     .lotteryDate(date)
                 .build();
@@ -54,7 +55,7 @@ public class HistoryDataDlt {
                             .levelName(x.getLevel())
                             .num(Integer.valueOf(x.getPiece()))
                             .money(Integer.valueOf(x.getMoney().replaceAll(",","")))
-                            .allMoney(Integer.valueOf(x.getAllmoney().replaceAll(",","")))
+                            .allMoney(Long.valueOf(x.getAllmoney().replaceAll(",","")))
                             .build())
                     .collect(Collectors.toList());
             dlt.setDltDetail(dltDetails);

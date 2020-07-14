@@ -14,6 +14,10 @@ public class NumberUtils {
         return Integer.valueOf(num.replaceAll(",",""));
     }
 
+    public static Long parseLong(String num){
+        return Long.valueOf(num.replaceAll(",",""));
+    }
+
     public static String toString(List<Integer> list){
         StringBuilder str = new StringBuilder();
         list.stream().forEach(x->str.append(x).append(","));
