@@ -1,7 +1,6 @@
 package com.suns.lottery.tball.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.suns.lottery.tball.DltService;
 import com.suns.lottery.tball.SsqService;
 import com.suns.lottery.tball.bean.Ssq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,28 +18,16 @@ import java.util.Set;
  * @create: 2020-01-13 19:56
  **/
 @Controller
-@RequestMapping("lottery")
-public class MainController {
+@RequestMapping("lottery/ssq")
+public class SsqController {
     @Autowired
     private SsqService ssqService;
-
-    @Autowired
-    private DltService dltService;
-
-
     @RequestMapping
     public String index(){
         return "index";
     }
 
-    @ResponseBody
-    @RequestMapping("/dlt/pullAllData")
-    public String pullDltdate(){
-        dltService.pullAllData();
-        return "done!";
-    }
-
-    @RequestMapping("/ssq/pullAllData")
+    @RequestMapping("/pullAllData")
     public String pullSsqdate(){
         ssqService.pullAllData();
         return "done!";

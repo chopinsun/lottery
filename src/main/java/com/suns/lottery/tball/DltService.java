@@ -1,19 +1,14 @@
 package com.suns.lottery.tball;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.Dlt;
 
 import com.suns.lottery.tball.bean.DltDetail;
-import com.suns.lottery.tball.bean.SsqDetail;
-import com.suns.lottery.tball.common.Constants;
-import com.suns.lottery.tball.common.Sort;
+import com.suns.lottery.tball.bean.Kv;
 import com.suns.lottery.tball.mapper.DltDetailMapper;
 import com.suns.lottery.tball.mapper.DltMapper;
-import com.suns.lottery.tball.utils.HttpInvoker;
 import com.suns.lottery.tball.utils.NumberUtils;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.RandomUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,6 +25,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static com.suns.lottery.tball.common.Constants.REDBALLLIMIT;
 
 /**
  * @title: lottery-tball
@@ -40,8 +38,7 @@ import java.util.stream.IntStream;
 @Log4j2
 @Component
 public class DltService {
-    @Autowired
-    private HttpInvoker httpInvoker;
+
     @Autowired
     private DltMapper dltMapper;
     @Autowired
@@ -63,7 +60,7 @@ public class DltService {
         HttpHeaders headers  = new HttpHeaders();
 
         try {
-            Document doc = Jsoup.connect("http://datachart.500.com/dlt/history/newinc/history.php?start=07002&end=20062").get();
+            Document doc = Jsoup.connect("http://datachart.500.com/dlt/history/newinc/history.php?start=07001&end=19113").get();
             Elements content = doc.getElementById("tdata").children();//获取id为tdata的tbody下的tr
             List<Dlt> list = new ArrayList<>();
             //遍历所有的a标签
@@ -131,33 +128,15 @@ public class DltService {
          * 篮球共16个
          * 篮球取最少出现的3个球，随机取一个
          **/
-        Map<Integer,Integer> map = new HashMap<>();
-        IntStream.range(1, 34).forEach(i->{
-            int n = dltMapper.countByRedNum(i);
-            map.put(i,n);
-        });
-        log.info(map);
-        Set<Map.Entry<Integer,Integer>> entrys = map.entrySet();
-        log.info("红球-size:{}",entrys.size());
-        log.info("红球-原始数据:{}",JSONObject.toJSONString(map));
-        log.info("红球-总排序:{}",JSONArray.toJSONString(entrys.stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toList())));
-        List<Integer> redBalls = entrys.stream().sorted(Map.Entry.comparingByValue()).limit(Constants.REDBALLLIMIT).map(n->n.getKey()).collect(Collectors.toList());
-        log.info("红球-前{}位:{}",Constants.REDBALLLIMIT,JSONArray.toJSONString(redBalls));
-        List<Integer> blueBallsResult = dltMapper.countByBlue1Num(Sort.ASC.getCode());
-//        List<Integer> b2BallsResult = dltMapper.countByBlue2Num(Sort.ASC.getCode());
-        log.info("蓝球-总排序:{}",JSONArray.toJSONString(blueBallsResult));
-        List<Integer> blueBalls = blueBallsResult.stream().limit(Constants.BLUEBALLLIMIT).collect(Collectors.toList());
-        log.info("蓝球-前{}位:{}",JSONArray.toJSONString(blueBalls));
+        List<Kv<Integer,Integer>> redBalls = getSortedRedBalls();
+        log.info("红球-前{}位:{}", REDBALLLIMIT,JSONArray.toJSONString(redBalls));
+        List<Kv<Integer,Integer>> blueBalls = getSortedBlueBalls();
+        log.info("蓝球-前{}位:{}", REDBALLLIMIT,JSONArray.toJSONString(blueBalls));
 
         while (result.size()<num){
-            Random rand = new Random();
-            Set<Integer> rbs = new HashSet<>();
-            while(rbs.size()<6){
-                rbs.add(redBalls.get(rand.nextInt(Constants.REDBALLLIMIT)));
-            }
-            List<Integer> balls = rbs.stream().sorted(Comparator.comparingInt(o->o)).collect(Collectors.toList());
-            balls.add(blueBalls.get(rand.nextInt(Constants.BLUEBALLLIMIT)));
-            result.add(balls);
+            List<Integer> reds = NumberUtils.randomMinWeight(redBalls,5).stream().sorted(Comparator.comparingInt(Integer::intValue)).collect(Collectors.toList());
+            List<Integer> blues = NumberUtils.randomMinWeight(blueBalls,2).stream().sorted(Comparator.comparingInt(Integer::intValue)).collect(Collectors.toList());
+            result.add(Stream.of(reds,blues).flatMap(x->x.stream()).collect(Collectors.toList()));
         }
         return result;
     }
@@ -174,8 +153,27 @@ public class DltService {
      * @Date: 2020/1/14 19:49
      *
      **/
-    public List<String> generateNumByMax(int num){
-        return null;
+    public Set<List<Integer>> generateNumByMax(int num){
+        Set<List<Integer>> result = new HashSet<>(num);
+        /**
+         *红球共33个
+         *每个数字查一遍，统计最少出现的12个数字
+         *随机取6个数字出来，组成号码
+         * 将号码按照从小到大排序，便于观看
+         * 篮球共16个
+         * 篮球取最少出现的3个球，随机取一个
+         **/
+        List<Kv<Integer,Integer>> redBalls = getSortedRedBalls();
+        log.info("红球-前{}位:{}", REDBALLLIMIT,JSONArray.toJSONString(redBalls));
+        List<Kv<Integer,Integer>> blueBalls = getSortedBlueBalls();
+        log.info("蓝球-前{}位:{}", REDBALLLIMIT,JSONArray.toJSONString(blueBalls));
+
+        while (result.size()<num){
+            List<Integer> reds = NumberUtils.randomMaxWeight(redBalls,5).stream().sorted(Comparator.comparingInt(Integer::intValue)).collect(Collectors.toList());
+            List<Integer> blues = NumberUtils.randomMaxWeight(blueBalls,2).stream().sorted(Comparator.comparingInt(Integer::intValue)).collect(Collectors.toList());
+            result.add(Stream.of(reds,blues).flatMap(x->x.stream()).collect(Collectors.toList()));
+        }
+        return result;
     }
 
 
@@ -197,47 +195,27 @@ public class DltService {
          *红球：
          *最少出现的15个数字，取4个
          *出现次数居于16-28之间的，取1个
-         *最多出现的5个数字，取1个
+         *最多出现的6个数字，取2个
          * 将号码按照从小到大排序，便于观看
          * 蓝球：
          * 随机取一个
          **/
+        List<Kv<Integer,Integer>> redBalls = getSortedRedBalls();
+        log.info("红球-前{}位:{}", REDBALLLIMIT,JSONArray.toJSONString(redBalls));
+        List<Kv<Integer,Integer>> blueBalls = getSortedBlueBalls();
+        log.info("蓝球-前{}位:{}", REDBALLLIMIT,JSONArray.toJSONString(blueBalls));
 
-        Map<Integer,Integer> map = new HashMap<>();
-        IntStream.range(1, 34).forEach(i->{
-            int n = dltMapper.countByRedNum(i);
-            map.put(i,n);
-        });
-        log.info(map);
-        Set<Map.Entry<Integer,Integer>> entrys = map.entrySet();
-        log.info("红球-size:{}",entrys.size());
-        log.info("红球-原始数据:{}",JSONObject.toJSONString(map));
-        List<Integer> redBalls = entrys.stream().sorted(Map.Entry.comparingByValue()).map(n->n.getKey()).collect(Collectors.toList());
-        log.info("红球-总排序:{}",JSONArray.toJSONString(redBalls));
-        List<Integer> blueBalls = dltMapper.countByBlue1Num(Sort.ASC.getCode());
-        log.info("蓝球-总排序:{}",JSONArray.toJSONString(blueBalls));
-
-        while(result.size()<num){
-            Set<Integer> rbs = new HashSet<>();
-            //前15个取4个
-            while(rbs.size()<4){
-                rbs.add(redBalls.get(RandomUtils.nextInt(1,Constants.REDBALLLIMIT)));
-            }
-            //中间取1个
-            while(rbs.size()<5){
-                rbs.add(redBalls.get(RandomUtils.nextInt(Constants.REDBALLLIMIT_MID[0],Constants.REDBALLLIMIT_MID[1])));
-            }
-            //后5个取1个
-            while(rbs.size()<6){
-                rbs.add(redBalls.get(RandomUtils.nextInt(Constants.REDBALLLIMIT_MID[1],33)));
-            }
-            List<Integer> balls = rbs.stream().sorted(Comparator.comparingInt(o->o)).collect(Collectors.toList());
-            //排除历史数据
-            if(dltMapper.exists(balls.get(0),balls.get(1),balls.get(2),balls.get(3),balls.get(4),balls.get(5))==0){
-                balls.add(blueBalls.get(RandomUtils.nextInt(1,16)));
-                result.add(balls);
-            }
-        };
+        while (result.size()<num){
+            //最少出现
+            List<Integer> redmins = NumberUtils.random(redBalls.stream().sorted(Comparator.comparing(Kv::getValue)).limit(15).map(x->x.getKey()).collect(Collectors.toList()),4);
+            List<Integer> bluemins = NumberUtils.random(blueBalls.stream().sorted(Comparator.comparing(Kv::getValue)).limit(6).map(x->x.getKey()).collect(Collectors.toList()),1);
+            //居中出现
+            List<Integer> redmids = NumberUtils.random(IntStream.range(0,redBalls.size()-1).mapToObj(i->i).map(i->i>15 && i< 28?redBalls.get(i).getKey():-1).filter(i->i!=-1).collect(Collectors.toList()),1);
+            //最多出现
+            List<Integer> redmaxs = NumberUtils.random(redBalls.stream().sorted(Comparator.comparingInt(Kv<Integer,Integer>::getValue).reversed()).limit(6).map(x->x.getKey()).collect(Collectors.toList()),2);
+            List<Integer> bluerans = NumberUtils.random(blueBalls.stream().map(x->x.getKey()).collect(Collectors.toList()),1);
+            result.add(Stream.of(redmins,redmids,redmaxs,bluemins,bluerans).flatMap(x->x.stream()).collect(Collectors.toList()));
+        }
         return result;
     }
 
@@ -267,6 +245,16 @@ public class DltService {
     public List<Dlt> history(int n){
         List<Dlt> list = dltMapper.history(n);
         return list;
+    }
+
+
+    private List<Kv<Integer,Integer>> getSortedRedBalls(){
+        return IntStream.range(1, 34).mapToObj(i->i).map(i->new Kv(i,dltMapper.countByRedNum(i))).collect(Collectors.toList());
+    }
+
+
+    private List<Kv<Integer,Integer>> getSortedBlueBalls(){
+        return IntStream.range(1, 12).mapToObj(i->i).map(i->new Kv(i,dltMapper.countByBlueNum(i))).collect(Collectors.toList());
     }
 
 }

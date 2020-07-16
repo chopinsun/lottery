@@ -88,13 +88,10 @@
   <select id="countByRedNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     select count(*) from dlt where r1=#{0} or r2=#{0} or r3=#{0} or r4=#{0} or r5=#{0}
   </select>
-  <select id="countByBlue1Num" resultType="java.lang.Integer">
-    SELECT t.b1 FROM (select COUNT(*) cnt,b1 from dlt group by b1) t ORDER BY t.cnt ${sort}
+  <select id="countByBlueNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from dlt where b1=#{0} or b2=#{0}
   </select>
 
-  <select id="countByBlue2Num" resultType="java.lang.Integer">
-    SELECT t.b2 FROM (select COUNT(*) cnt,b2 from dlt group by b2) t ORDER BY t.cnt ${sort}
-  </select>
 
   <select id="groupByBlueNum" resultType="java.util.Map">
     select b1 ball,COUNT(*) cnt from dlt group by b1

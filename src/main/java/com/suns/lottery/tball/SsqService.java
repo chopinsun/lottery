@@ -70,7 +70,7 @@ public class SsqService {
         HttpHeaders headers  = new HttpHeaders();
 
         try {
-            Document doc = Jsoup.connect("http://datachart.500.com/ssq/history/newinc/history.php?start=03001&end=20005").get();
+            Document doc = Jsoup.connect("http://datachart.500.com/ssq/history/newinc/history.php?start=03001&end=1911519115").get();
             Elements content = doc.getElementById("tdata").children();//获取id为content的dom节点
             List<Ssq> list = new ArrayList<>();
             //遍历所有的a标签

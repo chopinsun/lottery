@@ -21,9 +21,7 @@ public interface DltMapper {
 
     int countByRedNum(int num);
 
-    List<Integer> countByBlue1Num(@Param("sort") String sort);
-
-    List<Integer> countByBlue2Num(@Param("sort") String sort);
+    int countByBlueNum(Integer num);
 
     List<Map<String,Integer>> groupByBlueNum();
 
