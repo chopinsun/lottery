@@ -61,7 +61,7 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, lottery_date,create_time,update_time
-    from ssq
+    from ssq where code &lt; '20060' order by code desc
   </select>
   <insert id="batchInsert" parameterType="java.util.List" >
     <selectKey resultType ="java.lang.Integer" keyProperty= "id"
@@ -86,8 +86,8 @@
   <select id="countByRedNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     select count(*) from ssq where r1=#{0} or r2=#{0} or r3=#{0} or r4=#{0} or r5=#{0} or r6=#{0}
   </select>
-  <select id="countByBlueNum" resultType="java.lang.Integer">
-    SELECT t.b1 FROM (select COUNT(*) cnt,b1 from ssq group by b1) t ORDER BY t.cnt ${sort}
+  <select id="countByBlueNum" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select count(*) from ssq where b1=#{0}
   </select>
 
   <select id="countByBlueNum2" resultType="java.util.Map">

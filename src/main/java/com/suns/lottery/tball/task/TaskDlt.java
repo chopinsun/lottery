@@ -1,4 +1,4 @@
-package com.suns.lottery.tball;
+package com.suns.lottery.tball.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.*;
@@ -57,7 +57,7 @@ public class TaskDlt {
      * @Date: 2020/1/14 19:46
      *
      **/
-//    @Scheduled(cron = "0 0/1 * * * *")
+    @Scheduled(cron = "0 0 21 * * 1,3,6")
     public void upateDltData(){
         log.info("------------启动定时任务，拉取最新一期数据-----------");
         String dbLastCode = dbLastCode();

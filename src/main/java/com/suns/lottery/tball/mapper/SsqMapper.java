@@ -22,7 +22,7 @@ public interface SsqMapper {
 
     int countByRedNum(int num);
 
-    List<Integer> countByBlueNum(@Param("sort") String sort);
+    int countByBlueNum(int num);
 
     List<Map<String,Integer>> countByBlueNum2();
 

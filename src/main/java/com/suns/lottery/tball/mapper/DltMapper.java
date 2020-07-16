@@ -25,7 +25,7 @@ public interface DltMapper {
 
     List<Map<String,Integer>> groupByBlueNum();
 
-    int exists(@Param("r1") int r1, @Param("r2") int r2, @Param("r3") int r3, @Param("r4") int r4, @Param("r5") int r5, @Param("r6") int r6);
+    int exists(@Param("r1") int r1, @Param("r2") int r2, @Param("r3") int r3, @Param("r4") int r4, @Param("r5") int r5);
 
     List<Dlt> history(int n);
 

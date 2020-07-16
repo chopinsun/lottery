@@ -1,10 +1,11 @@
 package com.suns.lottery.tball.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.suns.lottery.tball.DltService;
+import com.suns.lottery.tball.service.DltService;
 import com.suns.lottery.tball.bean.Dlt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,25 +38,65 @@ public class DltController {
     }
 
     @ResponseBody
-    @RequestMapping("/generate/min")
-    public Set<List<Integer>> generateMin(Integer n){
+    @RequestMapping("/generate/min/{n}")
+    public Set<List<Integer>> generateMin(@PathVariable("n")  Integer n){
+        if(n==null || n==0){
+            n = 10;
+        }
+        if(n>2000){
+            throw new RuntimeException("一次生成的数据不能超过2千");
+        }
         Set<List<Integer>> list = dltService.generateNumByMin(n);
         return list;
     }
 
     @ResponseBody
-    @RequestMapping("/generate/max")
-    public List<String> generateMax(Integer n){
-        List<String> list = dltService.generateNumByMax(n);
+    @RequestMapping("/generate/max/{n}")
+    public Set<List<Integer>> generateMax(@PathVariable("n")  Integer n){
+        if(n==null || n==0){
+            n = 10;
+        }
+        if(n>2000){
+            throw new RuntimeException("一次生成的数据不能超过2千");
+        }
+        Set<List<Integer>> list = dltService.generateNumByMax(n);
         return list;
     }
 
 
     @ResponseBody
-    @RequestMapping("/generate/mix")
-    public Set<List<Integer>> generateMix(Integer n){
+    @RequestMapping("/generate/mix/{n}")
+    public Set<List<Integer>> generateMix(@PathVariable("n") Integer n){
+        if(n==null || n==0){
+            n = 10;
+        }
+        if(n>2000){
+            throw new RuntimeException("一次生成的数据不能超过2千");
+        }
         Set<List<Integer>> list = dltService.generateNumByMix(n);
         return list;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/gtl/{type}/{n}")
+    public String generateMix(@PathVariable("type") String type ,@PathVariable("n") Integer n){
+        if(n==null || n==0){
+             n = 100;
+        }
+        if(n>50000){
+            throw new RuntimeException("一次生成的数据不能超过5万");
+        }
+        Set<List<Integer>> list;
+        if("min".equals(type)){
+            list = dltService.generateNumByMin(n);
+        }else if("max".equals(type)){
+            list = dltService.generateNumByMax(n);
+        }else{
+            list = dltService.generateNumByMix(n);
+        }
+        dltService.saveToLib(list,"dlt");
+        return "done!";
     }
 
 
@@ -71,8 +112,8 @@ public class DltController {
     }
 
     @ResponseBody
-    @RequestMapping("/history")
-    public List<Dlt> history(Integer n){
+    @RequestMapping("/history/{n}")
+    public List<Dlt> history(@PathVariable("n") Integer n){
         return dltService.history(n);
     }
 

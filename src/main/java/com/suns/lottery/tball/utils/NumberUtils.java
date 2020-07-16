@@ -7,6 +7,7 @@ import org.apache.commons.lang3.RandomUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @title: lottery-tball
@@ -41,12 +42,14 @@ public class NumberUtils {
     * @Author:  sunxiaobo
     * @Date:  16:44 2020/7/15
     **/
-    public static List<Integer> random(List<Integer> list,Integer num){
-        return IntStream.range(0,num-1)
-                .mapToObj(i->i)
-                .map(i->list.get(RandomUtils.nextInt(0,list.size()-1)))
-                .collect(Collectors.toList());
+    public static List<Integer> distinctRandom(List<Integer> list,int num){
+        List<Integer> result = random(list,num).stream().distinct().collect(Collectors.toList());
+        while (result.size()<num){
+            result = Stream.of(result,random(list,1)).flatMap(x->x.stream()).distinct().collect(Collectors.toList());
+        }
+        return result;
     }
+
 
     /**
     * @Description: 随机最小加权算法
@@ -61,7 +64,9 @@ public class NumberUtils {
         //反向加权
         List<Kv<Integer,Integer>> rList = getReverseWeight(list);
         List<Integer> nList= rList.stream().map(x-> IntStream.range(0,x.getValue()).mapToObj(i->x.getKey())).flatMap(x->x).collect(Collectors.toList());
-        return random(nList,num);
+
+
+        return distinctRandom(nList,num);
     }
 
     /**
@@ -75,12 +80,12 @@ public class NumberUtils {
     public static List<Integer> randomMaxWeight(List<Kv<Integer,Integer>> list, Integer num){
         //加权
         List<Integer> nList= list.stream().map(x-> IntStream.range(0,x.getValue()).mapToObj(i->x.getKey())).flatMap(x->x).collect(Collectors.toList());
-        return random(nList,num);
+        return distinctRandom(nList,num);
     }
 
 
     private static List<Kv<Integer,Integer>> getReverseWeight(List<Kv<Integer,Integer>> m){
-        List<Kv<Integer,Integer>> n = m.stream().map(x-> new Kv(x.getKey(),x.getValue() * -1 +N)).collect(Collectors.toList());
+        List<Kv<Integer,Integer>> n = m.stream().map(x-> new Kv<Integer,Integer>(x.getKey(),x.getValue() * -1 +N)).collect(Collectors.toList());
         Optional<Integer> min = n.stream().map(x->x.getValue()).min(Comparator.comparingInt(Integer::intValue));
         if(min.isPresent() && min.get()<0){
             N+=100;
@@ -89,5 +94,13 @@ public class NumberUtils {
             return n;
         }
     }
+
+    private static List<Integer> random(List<Integer> list,Integer num){
+        return IntStream.range(0,num)
+                .mapToObj(i->i)
+                .map(i->list.get(RandomUtils.nextInt(0,list.size()-1)))
+                .collect(Collectors.toList());
+    }
+
 
 }

@@ -63,7 +63,7 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, code, r1, r2, r3, r4, r5, b1, b2, sales, poolmoney, content, lottery_date,lottery_timestamp,seq,create_time,update_time
-    from dlt
+    from dlt order by code desc
   </select>
   <insert id="batchInsert" parameterType="java.util.List" >
     <selectKey resultType ="java.lang.Integer" keyProperty= "id"
