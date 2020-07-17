@@ -47,6 +47,6 @@ public class Ssq {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date lotteryDate;
 
-    private List<SsqDetail> ssqDetail;
+    private List<SsqDetail> details;
 
 }

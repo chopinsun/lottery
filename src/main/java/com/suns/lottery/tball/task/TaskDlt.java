@@ -72,7 +72,7 @@ public class TaskDlt {
                         log.info("是新数据，执行插入:{}",JSONObject.toJSONString(x));
                         Dlt dlt= x.convert();
                         dltMapper.insert(dlt);
-                        dltDetailMapper.batchInsert(dlt.getDltDetail());
+                        dltDetailMapper.batchInsert(dlt.getDetails());
                     }
                 });
     }

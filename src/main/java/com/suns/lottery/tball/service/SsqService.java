@@ -277,7 +277,12 @@ public class SsqService {
 
     public List<Ssq> history(int n){
         List<Ssq> list = ssqMapper.history(n);
-        return list;
+        List<Ssq> nl = list.stream().map(x->{
+            List<SsqDetail> details = ssqDetailMapper.findByCode(x.getCode());
+            x.setDetails(details);
+            return x;
+        }).collect(Collectors.toList());
+        return nl;
     }
 
 

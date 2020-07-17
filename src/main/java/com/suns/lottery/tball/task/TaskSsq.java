@@ -75,7 +75,7 @@ public class TaskSsq {
                     log.info("是新数据，执行插入:{}",JSONObject.toJSONString(x));
                     Ssq ssq = x.convert();
                     ssqMapper.insert(ssq);
-                    ssqDetailMapper.batchInsert(ssq.getSsqDetail());
+                    ssqDetailMapper.batchInsert(ssq.getDetails());
                 }
             });
         }

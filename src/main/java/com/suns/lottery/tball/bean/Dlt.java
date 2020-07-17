@@ -46,7 +46,7 @@ public class Dlt {
 
     private String lotteryTimestamp;
 
-    private List<DltDetail> dltDetail;
+    private List<DltDetail> details;
 
 
     @JSONField(format = "yyyy-MM-dd")

@@ -72,7 +72,7 @@ public class LotteryResult {
                 .allMoney(StringUtils.isNotBlank(prizegrades.get(i).getTypenum()) && StringUtils.isNotBlank(prizegrades.get(i).getTypemoney()) ?Long.valueOf(prizegrades.get(i).getTypenum()) * Long.valueOf(prizegrades.get(i).getTypemoney()):0)
                 .build())
                 .collect(Collectors.toList());
-        lottery.setSsqDetail(details);
+        lottery.setDetails(details);
         return lottery;
     }
 

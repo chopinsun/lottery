@@ -58,7 +58,7 @@ public class HistoryDataDlt {
                             .allMoney(Long.valueOf(x.getAllmoney().replaceAll(",","")))
                             .build())
                     .collect(Collectors.toList());
-            dlt.setDltDetail(dltDetails);
+            dlt.setDetails(dltDetails);
 
             return dlt;
         } catch (ParseException e) {
