@@ -6,7 +6,7 @@
       <!-- <v-btn icon> -->
       <v-icon large>mdi-home</v-icon>
       <!-- </v-btn> -->
-      <v-toolbar-title>Lottery</v-toolbar-title>
+      <v-toolbar-title>{{lotteryName[lotteryType]}}</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -66,9 +66,20 @@
     <v-overlay absolute  :value="overlay">
       <v-card class="mx-auto" max-width="500" outlined  v-show="overlay" style="z-index:8" light>
         <div style="padding: 0 10px;">
+           <v-row>
+             <div style="width:80px; text-align:center;line-height:80px;">
+              <span class="form-title">彩票种类  </span>
+            </div>
+            <v-col>
+              <v-radio-group v-model="lotteryType">
+                <v-radio label="双色球" value="ssq"></v-radio>
+                <v-radio label="大乐透(体彩)" value="dlt" ></v-radio>
+              </v-radio-group>
+            </v-col>
+           </v-row>
       <v-row>
         <div style="width:80px; text-align:center;line-height:80px;">
-          <span class="form-title"> Number </span>
+          <span class="form-title"> 生成数 </span>
         </div>
         <v-col>
         <v-btn-toggle v-model="selected" shaped  mandatory >
@@ -83,20 +94,20 @@
       </v-row>
       <v-row>
          <div style="width:80px; text-align:center;line-height:80px;">
-          <span class="form-title"> Type </span>
+          <span class="form-title"> 模式 </span>
         </div>
         <v-col xs="10" >
            <v-radio-group v-model="type">
-              <v-radio label="mix" value="mix"></v-radio>
-              <v-radio label="min" value="min" ></v-radio>
-              <v-radio label="max" value="max" ></v-radio>
+              <v-radio label="混合" value="mix"></v-radio>
+              <v-radio label="最少出现(默认)" value="min" ></v-radio>
+              <v-radio label="最多出现" value="max" ></v-radio>
             </v-radio-group>
         </v-col>
       </v-row>
      
         </div>
       <v-card-actions style="text-align:center;">
-        <v-btn min-width="100%" outlined color="success"  @click="confirm">Confirm</v-btn>
+        <v-btn min-width="100%" outlined color="success"  @click="confirm">确定</v-btn>
       </v-card-actions>
     </v-card>
     </v-overlay>
@@ -109,13 +120,15 @@ export default {
   data() {
     return{
       nums: [5,10,15,20,'...'],
-      type: 'mix',
+      type: 'min',
       searching: false,
       items: [],
       custom:false,
       selected: 1,
       customNum:0,
       overlay:false,
+      lotteryName:{'ssq':'双色球','dlt':'大乐透'},
+      lotteryType:'ssq'
     }
   },
   computed:{
@@ -134,7 +147,7 @@ export default {
   methods:{
      search(){
        this.$axios
-        .get('/lottery/generate/'+this.type+'?n='+this.num)
+        .get('/lottery/'+this.lotteryType+'/generate/'+this.type+'/'+this.num)
         .then(response => {
           console.log(response.data)
           this.items = response.data

@@ -5,6 +5,7 @@ import com.suns.lottery.tball.bean.Kv;
 import com.suns.lottery.tball.bean.Ssq;
 import com.suns.lottery.tball.utils.Cache;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.core.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class SsqFilter {
     public List<Integer> cold() {
         List<Ssq> list = (List<Ssq>)cache.get(Cache.Type.SSQ);
         List<Kv<Integer,Integer>> l = IntStream.range(1,34).mapToObj(x->x).map(i->{
-            Long n = list.stream().limit(10).filter(x->x.getR1().equals(i)
+            Long n = list.stream().limit(15).filter(x->x.getR1().equals(i)
                     || x.getR2().equals(i)
                     || x.getR3().equals(i)
                     || x.getR4().equals(i)
@@ -37,7 +38,6 @@ public class SsqFilter {
                     || x.getR6().equals(i)).count();
             return new Kv<Integer,Integer>(i,n.intValue());
         }).sorted(Comparator.comparing(Kv<Integer,Integer>::getValue)).collect(Collectors.toList());
-        log.info(JSONArray.toJSONString(l));
         return l.stream().map(Kv::getKey).collect(Collectors.toList());
     }
 
@@ -45,7 +45,7 @@ public class SsqFilter {
     public List<Integer> hot() {
         List<Ssq> list = (List<Ssq>)cache.get(Cache.Type.SSQ);
         List<Kv<Integer,Integer>> l = IntStream.range(1,34).mapToObj(x->x).map(i->{
-            Long n = list.stream().limit(10).filter(x->x.getR1().equals(i)
+            Long n = list.stream().limit(15).filter(x->x.getR1().equals(i)
                     || x.getR2().equals(i)
                     || x.getR3().equals(i)
                     || x.getR4().equals(i)

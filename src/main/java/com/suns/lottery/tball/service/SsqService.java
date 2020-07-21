@@ -148,7 +148,7 @@ public class SsqService {
          * 随机权重取1个
          **/
         List<Kv<Integer,Integer>> redBalls = getSortedRedBalls();
-        log.info("红球:{}",JSONArray.toJSONString(redBalls));
+        log.info("红球:{}",JSONArray.toJSONString(redBalls.stream().map(x->x.toMap()).collect(Collectors.toList())));
         List<Kv<Integer,Integer>> blueBalls = getSortedBlueBalls();
         log.info("蓝球:{}",JSONArray.toJSONString(blueBalls));
         while (result.size()<num){
@@ -277,12 +277,11 @@ public class SsqService {
 
     public List<Ssq> history(int n){
         List<Ssq> list = ssqMapper.history(n);
-        List<Ssq> nl = list.stream().map(x->{
+        list.stream().forEach(x->{
             List<SsqDetail> details = ssqDetailMapper.findByCode(x.getCode());
             x.setDetails(details);
-            return x;
-        }).collect(Collectors.toList());
-        return nl;
+        });
+        return list;
     }
 
 

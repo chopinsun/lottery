@@ -10,20 +10,38 @@
         <template v-slot:item.numbers="{ item }">
           <div v-html="item.numbers"></div>
         </template>
-        <template v-slot:item.type1="{ item }">
-          <div v-html="item.type1"></div>
-        </template>
-         <template v-slot:item.type2="{ item }">
-          <div v-html="item.type2"></div>
-        </template>
-         <template v-slot:item.content="{ item }">
+          <template  v-slot:item.action="{ item }">
            <v-btn class="ma-2" text icon color="red lighten-2">
-              <v-icon  @click="snackbar = true">mdi-dots-horizontal-circle-outline</v-icon>
-            </v-btn>
-            <v-snackbar  v-model="snackbar" top color="teal lighten-3"> {{item.content}} </v-snackbar>
-        </template>
+              <v-icon  @click="show(item)">mdi-dots-horizontal-circle-outline</v-icon>
+          </v-btn>
+          </template>
      </v-data-table>
      </v-card>
+
+      <v-dialog v-model="dialog" max-width="290">
+        <v-card>
+          <v-card-title class="headline">中奖详情</v-card-title>
+          <v-card-text>
+            <template v-for="dt in shownItem.details" >
+              <div v-bind:key="dt.level">
+                <span class="level">{{dt.levelName}}</span>
+                <span class="leveln">{{dt.num}}</span>  *  <span class="levelm">{{dt.money.toLocaleString('en-US')}}</span>
+              </div>
+          </template>
+            <div class="content">
+              <div class="content-title">一等奖分布</div>
+              <div class="content-text" v-html="contentToText">
+              </div>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn  color="green darken-1" text  @click="dialog = false" >
+              关闭
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </div>
 </template>
 
@@ -36,14 +54,23 @@ export default {
         {text: '开奖日期',  value: 'lotteryDate'},
         { text: '中奖号码', value: 'numbers', },
         { text: '奖池奖金', value: 'poolmoney',},
-        { text: '一等奖', value: 'type1' },
-        { text: '二等奖', value: 'type2' },
-        { text: '详情', value:'content'},
+        {text:'详情', value:'action'},
       ],
       keywards:'',
       items:[],
       pageSize: 100,
       snackbar: false,
+      dialog:false,
+      shownItem: {}
+    }
+  },
+  computed:{
+    contentToText(){
+      console.log(this.shownItem)
+      if(this.shownItem && this.shownItem.content){
+        return this.shownItem.content.split(',').map(x=>'<div>'+x+'</div>').reduce((t1,t2)=>t1+t2)
+      }
+      return ''
     }
   },
   mounted(){
@@ -53,9 +80,8 @@ export default {
      search(){
        let $this = this
        this.$axios
-        .get('/lottery/history?n='+this.pageSize)
+        .get('/lottery/ssq/history/'+this.pageSize)
         .then(response => {
-          console.log(response.data)
           response.data.forEach(e => {
             let i = e
             i.numbers = 
@@ -63,19 +89,26 @@ export default {
             `<span class="num rednum">`+e.r2+`</span>`+
             `<span class="num rednum">`+e.r3+`</span>`+
             `<span class="num rednum">`+e.r4+`</span>`+
-            `<span class="num rednum">`+e.r5+`</span>`+
-            `<span class="num rednum">`+e.r6+`</span>`+
-            `<span class="num bluenum">`+e.b1+`</span>`
-            i.type1 = '<span class="yellownum">'+ e.type1Num + "</span> * "+ e.type1Money.toLocaleString('en-US')
-            i.type2 = '<span class="yellownum">'+ e.type2Num + "</span> * "+ e.type2Money.toLocaleString('en-US')
-            i.poolmoney = e.poolmoney.toLocaleString('en-US')
+            `<span class="num rednum">`+e.r5+`</span>`
+            if(e.r6){
+               i.numbers+=`<span class="num rednum">`+e.r6+`</span>`
+            }
+            i.numbers+=`<span class="num bluenum">`+e.b1+`</span>`
+            if(e.b2){
+              i.numbers+=`<span class="num bluenum">`+e.b2+`</span>`
+            }
+            i.poolmoney = e.poolmoney!=null?e.poolmoney.toLocaleString('en-US'):''
             $this.items.push(i)
           });
         })
         .catch(e=> { // 请求失败处理
-          window.console.log(e);
+          window.console.log(e)
         });
      },
+     show(item){
+       this.shownItem = item
+       this.dialog =true
+     }
 
   }
 }
@@ -98,4 +131,27 @@ export default {
 .v-snack__wrapper{
   box-shadow:none!important;
 }
+.level{
+  padding: 0 10px;
+  color: #000;
+}
+.leveln{
+  padding: 0 5px;
+  color: red;
+}
+.levelm{
+  padding: 0 5px;
+}
+.content{
+  padding: 10px 0;
+}
+.content-title{
+    font-size: 16px;
+    color: #000;
+    padding: 10px 0;
+  }
+  .content-text div{
+    display: inline-block;
+    width: 45%;
+  }
 </style>

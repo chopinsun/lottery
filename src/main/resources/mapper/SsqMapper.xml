@@ -61,7 +61,7 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, code, r1, r2, r3, r4, r5, r6, b1, b2, sales, poolmoney, content, lottery_date,create_time,update_time
-    from ssq where code &lt; '20060' order by code desc
+    from ssq order by code desc
   </select>
   <insert id="batchInsert" parameterType="java.util.List" >
     <selectKey resultType ="java.lang.Integer" keyProperty= "id"

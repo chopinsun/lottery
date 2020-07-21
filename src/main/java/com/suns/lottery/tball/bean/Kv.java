@@ -1,5 +1,6 @@
 package com.suns.lottery.tball.bean;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +31,13 @@ public class Kv<K,V> implements Map.Entry<K,V>{
     @Override
     public V setValue(V value) {
         return v;
+    }
+
+    public Map<String,Object> toMap(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("key",k);
+        map.put("value",v);
+        return map;
     }
 
 }

@@ -9,7 +9,7 @@
 
     </appenders>
     <loggers>
-        <Logger name="com.suns.lottery.tball.mapper" level="TRACE" additivity="false">
+        <Logger name="com.suns.lottery.tball.mapper" level="ERROR" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <root level="INFO">
