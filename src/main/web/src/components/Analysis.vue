@@ -18,6 +18,7 @@
 
 <script>
 export default {
+  props: ['lotteryMod','lotteryType','currentNum'],
   data() {
     return{
       redBalls: {
@@ -63,7 +64,7 @@ export default {
   methods:{
      search(){
        this.$axios
-        .get('/lottery/ssq/count')
+        .get('/lottery/'+this.lotteryType+'/count')
         .then(response => {
           console.log(response)
           this.redBalls.rows = response.data.redBall

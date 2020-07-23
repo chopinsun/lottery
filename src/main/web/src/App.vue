@@ -3,7 +3,7 @@
     <v-app-bar absolute color="teal lighten-3" dark shrink-on-scroll dense  scroll-target="#scrolling-techniques" >
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-      <v-toolbar-title>{{lottery[config.ctype].name}}</v-toolbar-title>
+      <v-toolbar-title>{{lottery[lotteryType].name}}</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -15,7 +15,7 @@
       </v-btn>
 
       <v-btn icon @click="toggleType">
-        <v-icon>{{lottery[config.ctype].icon}}</v-icon>
+        <v-icon>{{lottery[lotteryType].icon}}</v-icon>
       </v-btn>
       <v-btn icon @click.stop="dialog=true">
         <v-icon>mdi-cog</v-icon>
@@ -31,7 +31,7 @@
 
     <v-sheet id="scrolling-techniques" class="overflow-y-auto" max-height="600">
       <v-container style="margin-top:96px;">
-        <component v-bind:is="currentTabComponent" :config ="config" :currentNum="currentNum" v-on:chooseNum="setChooseNum"></component>
+        <component v-bind:is="currentTabComponent" :lotteryMod ="lotteryMod" :lotteryType="lotteryType" :currentNum="currentNum" v-on:chooseNum="setChooseNum"></component>
       </v-container>
     </v-sheet>
  
@@ -151,11 +151,9 @@ export default {
             'icon':'mdi-alpha-d-circle-outline'
           }
       },
-      config:{
-      mod: 'min',
-      ctype: 'ssq',
-      },
-      currentNum: 10,
+      lotteryMod: 'min',
+      lotteryType: 'ssq',
+      currentNum:10,
       chooseNums:[],
     }
   },
@@ -179,13 +177,13 @@ export default {
     confirm(){
        this.dialog = false
        this.currentNum = this.index<=3?this.nums[this.index]:this.customNum
-       this.config.mod=this.mod
+       this.lotteryMod=this.mod
      },
      toggleType(){
-       if(this.config.ctype === 'ssq' ){
-         this.config.ctype = 'dlt'
+       if(this.lotteryType === 'ssq' ){
+         this.lotteryType = 'dlt'
        }else{
-         this.config.ctype = 'ssq'
+         this.lotteryType = 'ssq'
        }
      },
      setChooseNum(list){

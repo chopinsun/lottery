@@ -281,7 +281,7 @@ public class DltService {
     }
 
     private Boolean historyExists(List<Integer> balls){
-        List<Dlt> ssqList =(List<Dlt>) cache.get(Cache.Type.SSQ);
+        List<Dlt> ssqList =(List<Dlt>) cache.get(Cache.Type.DLT);
         Optional<Dlt> exists= ssqList.stream().filter(x->balls.get(0).equals(x.getR1())
                 && balls.get(1).equals(x.getR2())
                 && balls.get(3).equals(x.getR3())

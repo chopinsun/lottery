@@ -42,11 +42,15 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 
 <script>
 export default {
+  props: ['lotteryMod','lotteryType','currentNum'],
   data() {
     return{
       headers: [
@@ -61,16 +65,21 @@ export default {
       pageSize: 100,
       snackbar: false,
       dialog:false,
-      shownItem: {}
+      shownItem: {},
+      overlay: false
     }
   },
   computed:{
     contentToText(){
-      console.log(this.shownItem)
       if(this.shownItem && this.shownItem.content){
         return this.shownItem.content.split(',').map(x=>'<div>'+x+'</div>').reduce((t1,t2)=>t1+t2)
       }
       return ''
+    }
+  },
+  watch:{
+    lotteryType(){
+      this.search()
     }
   },
   mounted(){
@@ -78,11 +87,15 @@ export default {
   },
   methods:{
      search(){
+       this.items = []
+       this.overlay =true
        let $this = this
        this.$axios
-        .get('/lottery/ssq/history/'+this.pageSize)
+        .get('/lottery/'+$this.lotteryType+'/history/'+$this.pageSize)
         .then(response => {
+          console.log(response)
           response.data.forEach(e => {
+            $this.overlay = false
             let i = e
             i.numbers = 
             `<span class="num rednum">`+e.r1+`</span>`+
@@ -102,7 +115,8 @@ export default {
           });
         })
         .catch(e=> { // 请求失败处理
-          window.console.log(e)
+        $this.overlay = false
+          console.log(e)
         });
      },
      show(item){

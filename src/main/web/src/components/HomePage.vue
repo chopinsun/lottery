@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  props: ['config','currentNum'],
+  props: ['lotteryMod','lotteryType','currentNum'],
   data() {
     return{
       items: [],
@@ -52,10 +52,15 @@ export default {
     this.search()
   },
   watch:{
-    currentNum(n,o){
-      console.log(n.o)
+    lotteryMod(){
       this.search()
-    }
+    },
+     lotteryType(){
+      this.search()
+    },
+     currentNum(){
+      this.search()
+    },
   },
   computed:{
     
@@ -64,7 +69,7 @@ export default {
      search(){
        this.overlay = true
        this.$axios
-        .get('/lottery/'+this.config.ctype+'/generate/'+this.config.mod+'/'+this.currentNum)
+        .get('/lottery/'+this.lotteryType+'/generate/'+this.lotteryMod+'/'+this.currentNum)
         .then(response => {
           this.items = response.data
           this.overlay =false
