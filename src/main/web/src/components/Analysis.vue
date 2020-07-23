@@ -2,14 +2,14 @@
   <div class="Analysis">
     <v-card class="redBall">
       <v-toolbar flat dense>
-        <v-toolbar-title>redballs</v-toolbar-title>
+        <v-toolbar-title>红球出现次数</v-toolbar-title>
       </v-toolbar>
        <ve-line :data="redBalls" :theme="theme_red" :legend-visible="false"></ve-line>
     </v-card>
 
      <v-card  class="blueBall">
        <v-toolbar flat dense>
-        <v-toolbar-title>blueballs</v-toolbar-title>
+        <v-toolbar-title>蓝球出现次数</v-toolbar-title>
       </v-toolbar>
        <ve-line :data="blueBalls" :theme="theme_blue" :legend-visible="false"></ve-line>
     </v-card >
@@ -63,7 +63,7 @@ export default {
   methods:{
      search(){
        this.$axios
-        .get('/lottery/count')
+        .get('/lottery/ssq/count')
         .then(response => {
           console.log(response)
           this.redBalls.rows = response.data.redBall

@@ -1,54 +1,25 @@
 <template>
   <div class="homepage">
-    
-    <v-container>
-      <v-app-bar color="white" >
-      <!-- <v-btn icon> -->
-      <v-icon large>mdi-home</v-icon>
-      <!-- </v-btn> -->
-      <v-toolbar-title>{{lotteryName[lotteryType]}}</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon large @click="overlay =!overlay">
-        <v-icon>mdi-settings</v-icon>
-      </v-btn>
-      <!-- <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn> -->
-<!-- 
-      <v-menu left bottom >
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item
-            v-for="n in 5"
-            :key="n"
-            @click="() => {}"
-          >
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
--->      
-    </v-app-bar>
-      
-      <v-divider></v-divider>
     <v-list>
     <v-list-item v-for="(item,idx) in items" :key="idx">
       <v-list-item-content>
-        <v-list-item-title>
-          <v-btn class="mx-1" fab dark x-small color="red" v-for="n in 6" :key="n">
+        <v-row style="margin:0">
+          <v-col style="padding:0;max-width:12.6%;line-height:44px;"  v-for="n in 6" :key="n">
+          <v-btn  fab dark x-small color="red">
             <v-icon dark>{{item[n-1]}}</v-icon>
           </v-btn>
-          <v-btn class="mx-1" fab dark x-small color="blue">
+          </v-col>
+          <v-col style="padding:0;max-width:12.6%;line-height:44px;" > 
+          <v-btn fab dark x-small color="blue">
             <v-icon dark>{{item[6]}}</v-icon>
           </v-btn>
-        </v-list-item-title>
+          </v-col>
+          <v-col style="padding:0;max-width:12.6%;line-height:44px;" >
+              <v-btn icon @click="chooseNum(item)">
+                <v-icon>{{selected(item)}}</v-icon>
+              </v-btn>
+          </v-col>
+        </v-row>
       </v-list-item-content>
     </v-list-item>
     </v-list>
@@ -60,109 +31,68 @@
       </v-btn>
     <div class="footer">
     </div>
-    </v-container>
- 
-
-    <v-overlay absolute  :value="overlay">
-      <v-card class="mx-auto" max-width="500" outlined  v-show="overlay" style="z-index:8" light>
-        <div style="padding: 0 10px;">
-           <v-row>
-             <div style="width:80px; text-align:center;line-height:80px;">
-              <span class="form-title">彩票种类  </span>
-            </div>
-            <v-col>
-              <v-radio-group v-model="lotteryType">
-                <v-radio label="双色球" value="ssq"></v-radio>
-                <v-radio label="大乐透(体彩)" value="dlt" ></v-radio>
-              </v-radio-group>
-            </v-col>
-           </v-row>
-      <v-row>
-        <div style="width:80px; text-align:center;line-height:80px;">
-          <span class="form-title"> 生成数 </span>
-        </div>
-        <v-col>
-        <v-btn-toggle v-model="selected" shaped  mandatory >
-          <v-btn v-for="(item,i) in nums" :key="i" :value="i" active-class="choosed" outlined>{{item}}</v-btn>
-        </v-btn-toggle>
-        </v-col>
-      </v-row>
-       <v-row v-if="selected === 4" >
-        <v-col >
-          <v-text-field label="Customize" outlined v-model="customNum"></v-text-field>
-        </v-col> 
-      </v-row>
-      <v-row>
-         <div style="width:80px; text-align:center;line-height:80px;">
-          <span class="form-title"> 模式 </span>
-        </div>
-        <v-col xs="10" >
-           <v-radio-group v-model="type">
-              <v-radio label="混合" value="mix"></v-radio>
-              <v-radio label="最少出现(默认)" value="min" ></v-radio>
-              <v-radio label="最多出现" value="max" ></v-radio>
-            </v-radio-group>
-        </v-col>
-      </v-row>
-     
-        </div>
-      <v-card-actions style="text-align:center;">
-        <v-btn min-width="100%" outlined color="success"  @click="confirm">确定</v-btn>
-      </v-card-actions>
-    </v-card>
+     <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    
   </div>
 </template>
 
 <script>
 export default {
+  props: ['config','currentNum'],
   data() {
     return{
-      nums: [5,10,15,20,'...'],
-      type: 'min',
-      searching: false,
       items: [],
       custom:false,
-      selected: 1,
-      customNum:0,
       overlay:false,
-      lotteryName:{'ssq':'双色球','dlt':'大乐透'},
-      lotteryType:'ssq'
+      selectedList:new Array(),
     }
-  },
-  computed:{
-    num(){
-      if(this.nums[this.selected]!=='...'){
-          return this.nums[this.selected]
-        }else{
-           return this.customNum
-        }
-     
-    },
   },
   mounted(){
     this.search()
   },
+  watch:{
+    currentNum(n,o){
+      console.log(n.o)
+      this.search()
+    }
+  },
+  computed:{
+    
+  },
   methods:{
      search(){
+       this.overlay = true
        this.$axios
-        .get('/lottery/'+this.lotteryType+'/generate/'+this.type+'/'+this.num)
+        .get('/lottery/'+this.config.ctype+'/generate/'+this.config.mod+'/'+this.currentNum)
         .then(response => {
-          console.log(response.data)
           this.items = response.data
+          this.overlay =false
         })
         .catch(e=> { // 请求失败处理
-          window.console.log(e);
+          window.console.log(e)
+          this.overlay =false
         });
      },
-     select(idx){
-        this.selected = idx
-     },
-     confirm(){
-       this.overlay = false
-      //  this.search();
-     }
+     selected(item){
+       if(!this.selectedList || this.selectedList.length==0){
+         return 'mdi-heart-outline'
+       }
+      let exists = this.selectedList.indexOf(item) != -1
+      if(exists){
+        return 'mdi-heart'
+      }else{
+        return 'mdi-heart-outline'
+      }
+    },
+    chooseNum(item){
+      if(this.selectedList.indexOf(item) != -1){
+        this.selectedList = this.selectedList.filter(i=>i!=item)
+      }else{
+        this.selectedList.push(item)
+      }
+      this.$emit("chooseNum",this.selectedList)
+    }
   }
 }
 
