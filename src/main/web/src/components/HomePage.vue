@@ -2,7 +2,7 @@
   <div class="homepage">
     <v-list>
     <v-list-item v-for="(item,idx) in items" :key="idx">
-      <v-list-item-content>
+      <v-list-item-content v-show="lotteryType==='ssq'">
         <v-row style="margin:0">
           <v-col style="padding:0;max-width:12.6%;line-height:44px;"  v-for="n in 6" :key="n">
           <v-btn  fab dark x-small color="red">
@@ -21,6 +21,32 @@
           </v-col>
         </v-row>
       </v-list-item-content>
+
+      <v-list-item-content  v-show="lotteryType==='dlt'">
+        <v-row style="margin:0">
+          <v-col style="padding:0;max-width:12.6%;line-height:44px;"  v-for="n in 5" :key="n">
+          <v-btn  fab dark x-small color="red">
+            <v-icon dark>{{item[n-1]}}</v-icon>
+          </v-btn>
+          </v-col>
+          <v-col style="padding:0;max-width:12.6%;line-height:44px;" > 
+          <v-btn fab dark x-small color="blue">
+            <v-icon dark>{{item[5]}}</v-icon>
+          </v-btn>
+          </v-col>
+           <v-col style="padding:0;max-width:12.6%;line-height:44px;" > 
+          <v-btn fab dark x-small color="blue">
+            <v-icon dark>{{item[6]}}</v-icon>
+          </v-btn>
+          </v-col>
+          <v-col style="padding:0;max-width:12.6%;line-height:44px;" >
+              <v-btn icon @click="chooseNum(item)">
+                <v-icon>{{selected(item)}}</v-icon>
+              </v-btn>
+          </v-col>
+        </v-row>
+      </v-list-item-content>
+
     </v-list-item>
     </v-list>
      <!-- <v-btn absolute  dark  fab right color="pink" class="bottom80">
@@ -39,7 +65,7 @@
 
 <script>
 export default {
-  props: ['lotteryMod','lotteryType','currentNum'],
+  props: ['lotteryMod','lotteryType','lotteryNum'],
   data() {
     return{
       items: [],
@@ -58,7 +84,7 @@ export default {
      lotteryType(){
       this.search()
     },
-     currentNum(){
+     lotteryNum(){
       this.search()
     },
   },
@@ -69,7 +95,7 @@ export default {
      search(){
        this.overlay = true
        this.$axios
-        .get('/lottery/'+this.lotteryType+'/generate/'+this.lotteryMod+'/'+this.currentNum)
+        .get('/lottery/'+this.lotteryType+'/generate/'+this.lotteryMod+'/'+this.lotteryNum)
         .then(response => {
           this.items = response.data
           this.overlay =false
@@ -108,12 +134,11 @@ export default {
 </script>
 
 <style scoped>
-.container{
-  min-width: 320px;
-  padding: 8px;
-}
 .v-list-item{
   padding: 0 8px;
+}
+.homepage{
+  height:100%;
 }
 
   .homepage .checkbox{

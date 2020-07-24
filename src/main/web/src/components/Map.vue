@@ -37,7 +37,7 @@ export default {
       winHeight = window.innerHeight
       else if ((document.body) && (document.body.clientHeight))
       winHeight = document.body.clientHeight
-      winHeight -= 56
+      winHeight -= 156
       return "height:"+winHeight+"px";
     }
   },

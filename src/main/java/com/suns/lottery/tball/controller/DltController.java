@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @title: lottery-tball
@@ -102,13 +103,25 @@ public class DltController {
 
     @ResponseBody
     @RequestMapping("/count")
-    public JSONObject count(){
-        JSONObject result = new JSONObject();
+    public List<Map<String,Object>> count(){
+        final List<Map<String,Integer>> redBallCnts = dltService.redBallCount();
+        final List<Map<String,Integer>> blueBallCnts = dltService.blueBallCount();
 
-        result.put("redBall", dltService.redBallCount());
-        result.put("blueBall", dltService.blueBallCount());
-
-        return result;
+        return IntStream.range(0,36).mapToObj(i->i).map(i->{
+            Map<String,Object> map = new HashMap<>();
+            map.put("num",i);
+            Optional<Map<String,Integer>> rb = redBallCnts.stream().filter(x->x.get("ball").equals(i)).findAny();
+            if(rb.isPresent()){
+                map.put("redBall",rb.get().get("cnt"));
+            }else{
+                map.put("redBall",0);
+            }
+            Optional<Map<String,Integer>> bb = blueBallCnts.stream().filter(x->x.get("ball").equals(i)).findAny();
+            if(bb.isPresent()){
+                map.put("blueBall",bb.get().get("cnt"));
+            }
+            return map;
+        }).collect(Collectors.toList());
     }
 
     @ResponseBody

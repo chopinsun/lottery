@@ -1,18 +1,9 @@
 <template>
   <div class="Analysis">
-    <v-card class="redBall">
       <v-toolbar flat dense>
-        <v-toolbar-title>红球出现次数</v-toolbar-title>
+        <div style="height:25px;font-size:14px;">号码次数分布</div>
       </v-toolbar>
-       <ve-line :data="redBalls" :theme="theme_red" :legend-visible="false"></ve-line>
-    </v-card>
-
-     <v-card  class="blueBall">
-       <v-toolbar flat dense>
-        <v-toolbar-title>蓝球出现次数</v-toolbar-title>
-      </v-toolbar>
-       <ve-line :data="blueBalls" :theme="theme_blue" :legend-visible="false"></ve-line>
-    </v-card >
+       <ve-scatter :data="chartData" :settings="chartSettings" :legend-visible="true"  :judge-width="true" theme-name="lottery" :mark-line="markLine" :mark-point="markPoint" :colors="colors" style="min-height:460px;"></ve-scatter>
   </div>
 </template>
 
@@ -20,55 +11,61 @@
 export default {
   props: ['lotteryMod','lotteryType','currentNum'],
   data() {
+      this.markLine = {
+        data: [
+          {
+            name: '平均线',
+            type: 'average'
+          }
+        ]
+      }
+      this.markPoint = {
+        data: [
+          {
+            name: '最大值',
+            type: 'max'
+          }
+        ]
+      }
+      this.dataZoom = [
+        {
+          type: 'slider',
+          start: 0,
+          end: 100
+        }
+      ]
+       this.colors = ['#d95850','#0098d9', '#e6b600',
+        '#2b821d', '#005eaa','#339ca8', 
+        '#cda819', '#32a487']
+
+      this.chartSettings = {
+        labelMap: {
+          redBall: '红球',
+          blueBall: '蓝球'
+        }
+      }
     return{
-      redBalls: {
-        columns: ['ball','cnt'],
-        rows:[]
+      chartData: {
+        columns: ['num','redBall','blueBall'],
+        rows:[],
       },
-      blueBalls:{
-        columns: ['ball','cnt'],
-        rows:[]
-      },
-      theme_red:{},
-      theme_blue:{}
     }
   },
   mounted(){
-    this.theme_red = {
-      "color": [
-          "#c12e34",
-          "#e6b600",
-          "#0098d9",
-          "#2b821d",
-          "#005eaa",
-          "#339ca8",
-          "#cda819",
-          "#32a487"
-      ]
-    }
-
-    this.theme_blue = {
-      "color": [
-          "#0098d9",
-          "#c12e34",
-          "#e6b600",
-          "#2b821d",
-          "#005eaa",
-          "#339ca8",
-          "#cda819",
-          "#32a487"
-      ]
-    }
     this.search()
+  },
+  watch:{
+     lotteryType(){
+      this.search()
+    },
+
   },
   methods:{
      search(){
        this.$axios
         .get('/lottery/'+this.lotteryType+'/count')
         .then(response => {
-          console.log(response)
-          this.redBalls.rows = response.data.redBall
-          this.blueBalls.rows = response.data.blueBall
+          this.chartData.rows = response.data
         })
         .catch(e=> { // 请求失败处理
           window.console.log(e);
@@ -81,6 +78,9 @@ export default {
 </script>
 
 <style scoped>
+  .Analysis{
+    height: 100%;
+  }
   .homepage ul li span{
     width: 25px;
     height: 25px;

@@ -93,7 +93,6 @@ export default {
        this.$axios
         .get('/lottery/'+$this.lotteryType+'/history/'+$this.pageSize)
         .then(response => {
-          console.log(response)
           response.data.forEach(e => {
             $this.overlay = false
             let i = e

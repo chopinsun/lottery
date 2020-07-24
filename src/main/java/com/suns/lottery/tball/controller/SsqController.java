@@ -1,5 +1,6 @@
 package com.suns.lottery.tball.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.Kv;
 import com.suns.lottery.tball.service.SsqService;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @title: lottery-tball
@@ -106,13 +109,25 @@ public class SsqController {
 
     @ResponseBody
     @RequestMapping("/count")
-    public JSONObject count() {
-        JSONObject result = new JSONObject();
+    public List<Map<String,Object>> count() {
+        final List<Map<String,Integer>> redBallCnts = ssqService.redBallCount();
+        final List<Map<String,Integer>> blueBallCnts = ssqService.blueBallCount();
 
-        result.put("redBall", ssqService.redBallCount());
-        result.put("blueBall", ssqService.blueBallCount());
-
-        return result;
+        return IntStream.range(0,34).mapToObj(i->i).map(i->{
+            Map<String,Object> map = new HashMap<>();
+            map.put("num",i);
+            Optional<Map<String,Integer>> rb = redBallCnts.stream().filter(x->x.get("ball").equals(i)).findAny();
+            if(rb.isPresent()){
+                map.put("redBall",rb.get().get("cnt"));
+            }else{
+                map.put("redBall",0);
+            }
+            Optional<Map<String,Integer>> bb = blueBallCnts.stream().filter(x->x.get("ball").equals(i)).findAny();
+            if(bb.isPresent()){
+                map.put("blueBall",bb.get().get("cnt"));
+            }
+            return map;
+        }).collect(Collectors.toList());
     }
 
     @ResponseBody

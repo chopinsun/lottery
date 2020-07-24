@@ -244,7 +244,7 @@ public class DltService {
 
     public List<Map<String,Integer>> redBallCount(){
         List<Map<String,Integer>> redBallsResult= new ArrayList<>();
-        IntStream.range(1, 34).forEach(i->{
+        IntStream.range(1, 36).forEach(i->{
             Map<String,Integer> map = new HashMap<>();
             int n = dltMapper.countByRedNum(i);
             map.put("ball",i);
@@ -284,9 +284,9 @@ public class DltService {
         List<Dlt> ssqList =(List<Dlt>) cache.get(Cache.Type.DLT);
         Optional<Dlt> exists= ssqList.stream().filter(x->balls.get(0).equals(x.getR1())
                 && balls.get(1).equals(x.getR2())
-                && balls.get(3).equals(x.getR3())
-                && balls.get(4).equals(x.getR5())
-                && balls.get(5).equals(x.getR6())).findAny();
+                && balls.get(2).equals(x.getR3())
+                && balls.get(3).equals(x.getR4())
+                && balls.get(4).equals(x.getR5())).findAny();
         return exists.isPresent();
     }
 }
