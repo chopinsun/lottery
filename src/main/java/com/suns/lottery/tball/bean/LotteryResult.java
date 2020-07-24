@@ -63,9 +63,9 @@ public class LotteryResult {
                 .sales(NumberUtils.parseLong(this.sales))
                 .build();
 
-        List<SsqDetail> details = IntStream.range(0,this.prizegrades.size()).mapToObj(i->i).map(i->SsqDetail.builder()
+        List<SsqDetail> details = IntStream.range(0,this.prizegrades.size()-1).mapToObj(i->i).map(i->SsqDetail.builder()
                 .code(this.code)
-                .level(i)
+                .level(i+1)
                 .levelName(intToHz(i+1)+"等奖")
                 .num(StringUtils.isNotBlank(prizegrades.get(i).getTypenum())?Integer.valueOf(prizegrades.get(i).getTypenum()):0)
                 .money(StringUtils.isNotBlank(prizegrades.get(i).getTypemoney())?Integer.valueOf(prizegrades.get(i).getTypemoney()):0)
