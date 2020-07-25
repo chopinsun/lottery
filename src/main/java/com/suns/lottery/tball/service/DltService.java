@@ -66,7 +66,7 @@ public class DltService {
         HttpHeaders headers  = new HttpHeaders();
 
         try {
-            Document doc = Jsoup.connect("http://datachart.500.com/dlt/history/newinc/history.php?start=07001&end=19113").get();
+            Document doc = Jsoup.connect("http://datachart.500.com/dlt/history/newinc/history.php?start=07001&end=20001").get();
             Elements content = doc.getElementById("tdata").children();//获取id为tdata的tbody下的tr
             List<Dlt> list = new ArrayList<>();
             //遍历所有的a标签
