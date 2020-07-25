@@ -38,6 +38,7 @@ public class SsqController {
         return "index";
     }
 
+    @ResponseBody
     @RequestMapping("/pullAllData")
     public String pullSsqdate() {
         ssqService.pullAllData();
