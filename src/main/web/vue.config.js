@@ -1,21 +1,35 @@
 module.exports = {
-  "devServer": {
+  devServer: {
+    disableHostCheck: true,
+    hotOnly: true,
     https: true,
-    "port": 8080,
+    port: 8080,
     proxy: {
       '/lottery': {
         target: 'https://127.0.0.1:8666/lottery', //对应自己的接口
         changeOrigin: true,
         ws: true,
         pathRewrite: {
-          '^/lottery': ''
-        }
-      }
-    }
+          '^/lottery': '',
+        },
+      },
+    },
+    public: '0.0.0.0:8080',
   },
-  "outputDir": "../resources/web",
-  "transpileDependencies": [
-    "vuetify"
-  ],
-
+  outputDir: '../resources/web',
+  transpileDependencies: ['vuetify'],
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@assets': '@/assets',
+        '@components': '@/components',
+        '@service': '@/services',
+        '@store': '@/store',
+        '@router': '@/router',
+        '@lib': '@/lib',
+        '@plugins': '@/plugins',
+        '@utils': '@/utils',
+      },
+    },
+  },
 }
