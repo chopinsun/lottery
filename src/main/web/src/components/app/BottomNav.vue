@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-nav">
+  <div class="bottom-nav" v-show="nav.showBot">
     <v-bottom-navigation v-model="bottomNav" shift change="changePage" fixed>
       <v-btn value="home">
         <span>Home</span>
@@ -37,6 +37,9 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      nav: (state) => state.nav,
+    }),
     currentTabComponent() {
       if ('home' === this.bottomNav) {
         return 'Home'

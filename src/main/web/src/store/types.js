@@ -6,8 +6,8 @@ export const alter = createModules('alter', {
 })
 
 export const nav = createModules('nav', {
-  M: ['CHOOSE_PAGE'],
-  G: ['CURRENT_PAGE'],
+  M: ['CHOOSE_PAGE', 'SHOW_TOP', 'HIDE_TOP', 'SHOW_BOT', 'HIDE_BOT'],
+  G: ['CURRENT_PAGE', 'SHOWTOPNAV', 'SHOWBOTNAV'],
 })
 
 export const account = createModules('account', {

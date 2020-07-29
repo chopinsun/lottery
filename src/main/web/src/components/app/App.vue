@@ -6,7 +6,7 @@
       class="overflow-y-auto"
       :style="{height:screenHeight+'px','margin-top':'-24px'}"
     >-->
-    <v-container style="margin-top:96px;" :style="{height:screenHeight+'px'}">
+    <v-container id="scrolling-techniques" style="height:100%;padding:0;">
       <keep-alive>
         <router-view></router-view>
       </keep-alive>

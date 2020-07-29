@@ -7,6 +7,7 @@
       shrink-on-scroll
       dense
       scroll-target="#scrolling-techniques"
+      v-show="nav.showTop"
     >
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 

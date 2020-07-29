@@ -1,17 +1,30 @@
 import { get, post } from '@lib/http'
 
 const login = (params) => {
-  return post('/login/' + params.username + '/' + params.password)
+  if (!params || !params.username || !params.password) {
+    return
+  }
+  return post('/account/login/' + params.username + '/' + params.password)
 }
 
 const logout = (params) => {
-  return post('/logout/' + params.username)
+  return post('/account/logout/' + params.username)
 }
 const thridAuth = (params) => {
-  return post('/lottery/' + params.lotteryType + '/history/' + params.pageSize)
+  return post('/account/thirdAuth/' + params.type, params)
+}
+
+const resetPwd = (params) => {
+  return post('/account/resetPwd', params)
+}
+
+const register = (params) => {
+  return post('/account/register', params)
 }
 export default {
   login,
   logout,
   thridAuth,
+  resetPwd,
+  register,
 }

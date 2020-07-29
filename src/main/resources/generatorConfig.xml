@@ -17,8 +17,8 @@
         </commentGenerator>
         <!--jdbc的数据库连接 wg_insert 为数据库名字-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://10.226.133.35:3002/jcloud_record?useUnicode=true&amp;characeterEncoding=utf-8&amp;serverTimezone=UTC"
-                        userId="root"
+                        connectionURL="jdbc:mysql://sunshome.myqnapcloud.com:3306/lottery?useUnicode=true&amp;characeterEncoding=utf-8&amp;serverTimezone=UTC"
+                        userId="remote"
                         password="qweRTs45*hj"></jdbcConnection>
         <!--非必须，类型处理器，在数据库类型和java类型之间的转换控制-->
         <javaTypeResolver>
