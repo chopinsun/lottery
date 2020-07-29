@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suns.lottery.tball.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.User">
+        <result column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+        <result column="uid" jdbcType="VARCHAR" javaType="java.lang.String" property="code"/>
+        <result column="username" jdbcType="VARCHAR" javaType="java.lang.String" property="username"/>
+        <result column="password" jdbcType="VARCHAR" javaType="java.lang.String" property="password"/>
+        <result column="invite_code" jdbcType="VARCHAR" javaType="java.lang.String" property="inviteCode"/>
+        <result column="source_type" jdbcType="TINYINT" javaType="java.lang.Integer" property="sourceType"/>
+        <result column="invite_link" jdbcType="VARCHAR" javaType="java.lang.String" property="inviteLink"/>
+        <result column="create_time" jdbcType="DATETIME" javaType="java.util.Date" property="createTime"/>
+        <result column="wechart" jdbcType="VARCHAR" javaType="java.lang.String" property="wechart"/>
+        <result column="user_group" jdbcType="VARCHAR" javaType="java.lang.String" property="userGroup"/>
+        <result column="authority_id" jdbcType="VARCHAR" javaType="java.lang.String" property="authorityId"/>
+        <result column="mobile" jdbcType="VARCHAR" javaType="java.lang.String" property="mobile"/>
+        <result column="third_flag" jdbcType="TINYINT" javaType="java.lang.Integer" property="thridFlag"/>
+        <result column="status" jdbcType="TINYINT" javaType="java.lang.Integer" property="status"/>
+
+    </resultMap>
+
+    <select id="findByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from user
+    where
+    username = #{0}
+    </select>
+    <select id="findByUid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from user
+    where
+    uid = #{0}
+    </select>
+
+    <insert id="addUser" parameterType="com.suns.lottery.tball.bean.User">
+        insert into user(uid,username,password,invite_code,source_type,invite_link,create_time,wechart,user_group,authority_id,mobile,third_flag,status)
+        values (#{uid},#{username},#{password},#{inviteCode},#{sourceType},#{inviteLink},#{createTime},#{wechart},#{userGroup},#{authorityId},#{mobile},#{thridFlag},#{status})
+    </insert>
+
+    <update id="updateByUid">
+        update user
+        set
+        <trim suffix="," suffixOverrides=",">
+        <if test="username!=null and username!=''">
+            username =#{username,jdbcType=VARCHAR}
+        </if>
+        <if test="password!=null and password!=''">
+            password =#{password,jdbcType=VARCHAR}
+        </if>
+        <if test="inviteCode!=null and inviteCode!=''">
+            invite_code =#{inviteCode,jdbcType=VARCHAR}
+        </if>
+        <if test="sourceType!=null ">
+            source_type =#{sourceType,jdbcType=TINYINT}
+        </if>
+        <if test="inviteLink!=null and inviteLink!=''">
+            invite_link =#{inviteLink,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime!=null and createTime!=''">
+            create_time =#{createTimejdbcType=DATETIME}
+        </if>
+        <if test="wechart!=null and wechart!=''">
+            wechart =#{wechart,jdbcType=VARCHAR}
+        </if>
+        <if test="userGroup!=null and userGroup!=''">
+            user_group =#{userGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="authorityId!=null and authorityId!=''">
+            authority_id =#{authorityId,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile!=null and mobile!=''">
+            mobile =#{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="thirdFlag!=null ">
+            third_flag =#{thirdFlag,jdbcType=TINYINT}
+        </if>
+        <if test="status!=null ">
+            status =#{status,jdbcType=TINYINT}
+        </if>
+        </trim>
+        where uid = #{uid,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

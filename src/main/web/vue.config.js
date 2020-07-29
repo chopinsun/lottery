@@ -13,6 +13,14 @@ module.exports = {
           '^/lottery': '',
         },
       },
+      '/account': {
+        target: 'https://127.0.0.1:8666/account', //对应自己的接口
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/account': '',
+        },
+      },
     },
     public: '0.0.0.0:8080',
   },
