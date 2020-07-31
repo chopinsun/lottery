@@ -1,5 +1,5 @@
 import account from './Account'
-import alert from './Alter'
+import alert from './Alert'
 import chart from './Chart'
 import favorite from './Favorite'
 import history from './History'

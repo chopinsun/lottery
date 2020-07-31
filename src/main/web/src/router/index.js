@@ -8,31 +8,38 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/home',
+      redirect: '/main/home',
     },
     {
-      path: '/home',
-      component: () => import('@components/pages/Home'),
-    },
-    {
-      path: '/map',
-      component: () => import('@components/pages/Map'),
-    },
-    {
-      path: '/history',
-      component: () => import('@components/pages/History'),
+      path: '/main',
+      component: () => import('@views/Main'),
+      children: [
+        {
+          path: 'home',
+          component: () => import('@views/Home'),
+        },
+        {
+          path: 'map',
+          component: () => import('@views/Map'),
+        },
+        {
+          path: 'history',
+          component: () => import('@views/History'),
+        },
+
+        {
+          path: 'analysis',
+          component: () => import('@views/Analysis'),
+        },
+      ],
     },
     {
       path: '/login',
-      component: () => import('@components/pages/Login'),
+      component: () => import('@views/Login'),
     },
     {
       path: '/account',
-      component: () => import('@components/pages/Account'),
-    },
-    {
-      path: '/analysis',
-      component: () => import('@components/pages/Analysis'),
+      component: () => import('@views/Account'),
     },
   ],
 })

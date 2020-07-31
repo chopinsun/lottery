@@ -1,30 +1,16 @@
 <template>
   <v-app>
-    <app-nav></app-nav>
-    <!-- <v-sheet
-      id="scrolling-techniques"
-      class="overflow-y-auto"
-      :style="{height:screenHeight+'px','margin-top':'-24px'}"
-    >-->
-    <v-container id="scrolling-techniques" style="height:100%;padding:0;">
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
-    </v-container>
-    <!-- </v-sheet> -->
-    <bottom-nav></bottom-nav>
+    <alert></alert>
+    <router-view></router-view>
   </v-app>
 </template>
 
 <script>
-import AppNav from '../app/AppNav'
-import BottomNav from '../app/BottomNav'
-
+import Alert from '@components/Alert'
 export default {
   name: 'app',
   components: {
-    AppNav,
-    BottomNav,
+    Alert,
   },
   data() {
     return {

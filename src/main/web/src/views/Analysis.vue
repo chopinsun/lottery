@@ -19,8 +19,9 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
+import service from '@service/AnalysisService'
+import { nav } from '@store/types'
 export default {
-  props: ['lotteryMod', 'lotteryType', 'currentNum'],
   data() {
     this.markLine = {
       data: [
@@ -69,8 +70,18 @@ export default {
       },
     }
   },
+
   mounted() {
     this.search()
+  },
+  activated() {
+    this.showTopNav()
+    this.showBotNav()
+  },
+  computed: {
+    ...mapState({
+      lotteryType: (state) => state.lottery.type,
+    }),
   },
   watch: {
     lotteryType() {
@@ -78,16 +89,15 @@ export default {
     },
   },
   methods: {
-    search() {
-      this.$axios
-        .get('/lottery/' + this.lotteryType + '/count')
-        .then((response) => {
-          this.chartData.rows = response.data
-        })
-        .catch((e) => {
-          // 请求失败处理
-          window.console.log(e)
-        })
+    ...mapMutations({
+      showTopNav: nav.SHOW_TOP,
+      showBotNav: nav.SHOW_BOT,
+    }),
+    async search() {
+      const result = await service.count({
+        lotteryType: this.lotteryType,
+      })
+      this.chartData.rows = result
     },
   },
 }

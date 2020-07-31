@@ -1,12 +1,9 @@
 <template>
-  <div class="alter">
+  <div class="alert">
     <v-alert
-      text
-      dense
-      color="cyan"
       border="left"
-      elevation="2"
-      colored-border
+      dark
+      v-model="alertinfo.display"
       :type="alertinfo.level"
     >{{alertinfo.message}}</v-alert>
   </div>
@@ -14,17 +11,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import { alert } from '~store/types'
+import { alert } from '@store/types'
 export default {
   data() {
     return {}
-  },
-  watch: {
-    alertinfo() {
-      setTimeout(() => {
-        this.$store.comit('')
-      }, 3000)
-    },
   },
   computed: {
     ...mapState({
@@ -34,3 +24,14 @@ export default {
   methods: {},
 }
 </script>
+
+<style>
+.alert .v-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: #fff;
+  width: 100%;
+}
+</style>

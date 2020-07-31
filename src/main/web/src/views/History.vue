@@ -14,6 +14,8 @@
         disable-sort
         fixed-header
         :items-per-page="pageSize"
+        :hide-default-footer="true"
+        :footer-props="{showCurrentPage: false,showFirstLastPage:false,showItemsPerPage:false,showPagination:true}"
       >
         <template v-slot:item.numbers="{ item }">
           <div v-html="item.numbers"></div>
@@ -56,8 +58,9 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
+import service from '@service/HistoryService'
+import { nav } from '@store/types'
 export default {
-  props: ['lotteryMod', 'lotteryType', 'currentNum'],
   data() {
     return {
       headers: [
@@ -69,7 +72,7 @@ export default {
       ],
       keywards: '',
       items: [],
-      pageSize: 100,
+      pageSize: 5,
       snackbar: false,
       dialog: false,
       shownItem: {},
@@ -86,6 +89,9 @@ export default {
       }
       return ''
     },
+    ...mapState({
+      lotteryType: (state) => state.lottery.type,
+    }),
   },
   watch: {
     lotteryType() {
@@ -93,52 +99,56 @@ export default {
     },
   },
   mounted() {
-    this.search()
+    if (!this.items.length) {
+      this.search()
+    }
+  },
+  activated() {
+    this.showTopNav()
+    this.showBotNav()
   },
   methods: {
-    search() {
+    ...mapMutations({
+      showTopNav: nav.SHOW_TOP,
+      showBotNav: nav.SHOW_BOT,
+    }),
+    async search() {
       this.items = []
       this.overlay = true
-      let $this = this
-      this.$axios
-        .get('/lottery/' + $this.lotteryType + '/history/' + $this.pageSize)
-        .then((response) => {
-          response.data.forEach((e) => {
-            $this.overlay = false
-            let i = e
-            i.numbers =
-              `<span class="num rednum">` +
-              e.r1 +
-              `</span>` +
-              `<span class="num rednum">` +
-              e.r2 +
-              `</span>` +
-              `<span class="num rednum">` +
-              e.r3 +
-              `</span>` +
-              `<span class="num rednum">` +
-              e.r4 +
-              `</span>` +
-              `<span class="num rednum">` +
-              e.r5 +
-              `</span>`
-            if (e.r6) {
-              i.numbers += `<span class="num rednum">` + e.r6 + `</span>`
-            }
-            i.numbers += `<span class="num bluenum">` + e.b1 + `</span>`
-            if (e.b2) {
-              i.numbers += `<span class="num bluenum">` + e.b2 + `</span>`
-            }
-            i.poolmoney =
-              e.poolmoney != null ? e.poolmoney.toLocaleString('en-US') : ''
-            $this.items.push(i)
-          })
-        })
-        .catch((e) => {
-          // 请求失败处理
-          $this.overlay = false
-          console.log(e)
-        })
+      const result = await service.history({
+        lotteryType: this.lotteryType,
+        pageSize: this.pageSize,
+      })
+      result.forEach((e) => {
+        this.overlay = false
+        let i = e
+        i.numbers =
+          `<span class="num rednum">` +
+          e.r1 +
+          `</span>` +
+          `<span class="num rednum">` +
+          e.r2 +
+          `</span>` +
+          `<span class="num rednum">` +
+          e.r3 +
+          `</span>` +
+          `<span class="num rednum">` +
+          e.r4 +
+          `</span>` +
+          `<span class="num rednum">` +
+          e.r5 +
+          `</span>`
+        if (e.r6) {
+          i.numbers += `<span class="num rednum">` + e.r6 + `</span>`
+        }
+        i.numbers += `<span class="num bluenum">` + e.b1 + `</span>`
+        if (e.b2) {
+          i.numbers += `<span class="num bluenum">` + e.b2 + `</span>`
+        }
+        i.poolmoney =
+          e.poolmoney != null ? e.poolmoney.toLocaleString('en-US') : ''
+        this.items.push(i)
+      })
     },
     show(item) {
       this.shownItem = item
@@ -148,7 +158,10 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
+.history {
+  padding: 10px 8px 60px 8px;
+}
 .num {
   padding: 0 5px;
 }
@@ -186,5 +199,10 @@ export default {
 .content-text div {
   display: inline-block;
   width: 45%;
+}
+</style>
+<style>
+.history .v-data-table-header-mobile tr {
+  display: none;
 }
 </style>

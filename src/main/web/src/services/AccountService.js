@@ -1,4 +1,4 @@
-import { get, post } from '@lib/http'
+import { post } from '@lib/http'
 
 const login = (params) => {
   if (!params || !params.username || !params.password) {

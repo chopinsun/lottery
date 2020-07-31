@@ -1,6 +1,7 @@
 package com.suns.lottery.tball.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.suns.lottery.tball.common.JsonResult;
 import com.suns.lottery.tball.service.DltService;
 import com.suns.lottery.tball.bean.Dlt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,14 @@ public class DltController {
 
     @ResponseBody
     @RequestMapping("/pullAllData")
-    public String pullDltdate(){
+    public JsonResult pullDltdate(){
         dltService.pullAllData();
-        return "done!";
+        return JsonResult.success("done!");
     }
 
     @ResponseBody
     @RequestMapping("/generate/min/{n}")
-    public Set<List<Integer>> generateMin(@PathVariable("n")  Integer n){
+    public JsonResult generateMin(@PathVariable("n")  Integer n){
         if(n==null || n==0){
             n = 10;
         }
@@ -48,12 +49,12 @@ public class DltController {
             throw new RuntimeException("一次生成的数据不能超过2千");
         }
         Set<List<Integer>> list = dltService.generateNumByMin(n);
-        return list;
+        return JsonResult.success(list);
     }
 
     @ResponseBody
     @RequestMapping("/generate/max/{n}")
-    public Set<List<Integer>> generateMax(@PathVariable("n")  Integer n){
+    public JsonResult generateMax(@PathVariable("n")  Integer n){
         if(n==null || n==0){
             n = 10;
         }
@@ -61,13 +62,13 @@ public class DltController {
             throw new RuntimeException("一次生成的数据不能超过2千");
         }
         Set<List<Integer>> list = dltService.generateNumByMax(n);
-        return list;
+        return JsonResult.success(list);
     }
 
 
     @ResponseBody
     @RequestMapping("/generate/mix/{n}")
-    public Set<List<Integer>> generateMix(@PathVariable("n") Integer n){
+    public JsonResult generateMix(@PathVariable("n") Integer n){
         if(n==null || n==0){
             n = 10;
         }
@@ -75,13 +76,13 @@ public class DltController {
             throw new RuntimeException("一次生成的数据不能超过2千");
         }
         Set<List<Integer>> list = dltService.generateNumByMix(n);
-        return list;
+        return JsonResult.success(list);
     }
 
 
     @ResponseBody
     @RequestMapping("/gtl/{type}/{n}")
-    public String generateMix(@PathVariable("type") String type ,@PathVariable("n") Integer n){
+    public JsonResult generateMix(@PathVariable("type") String type ,@PathVariable("n") Integer n){
         if(n==null || n==0){
              n = 100;
         }
@@ -97,17 +98,17 @@ public class DltController {
             list = dltService.generateNumByMix(n);
         }
         dltService.saveToLib(list,"dlt");
-        return "done!";
+        return JsonResult.success("done!");
     }
 
 
     @ResponseBody
     @RequestMapping("/count")
-    public List<Map<String,Object>> count(){
+    public JsonResult count(){
         final List<Map<String,Integer>> redBallCnts = dltService.redBallCount();
         final List<Map<String,Integer>> blueBallCnts = dltService.blueBallCount();
 
-        return IntStream.range(0,36).mapToObj(i->i).map(i->{
+        return JsonResult.success(IntStream.range(0,36).mapToObj(i->i).map(i->{
             Map<String,Object> map = new HashMap<>();
             map.put("num",i);
             Optional<Map<String,Integer>> rb = redBallCnts.stream().filter(x->x.get("ball").equals(i)).findAny();
@@ -121,13 +122,13 @@ public class DltController {
                 map.put("blueBall",bb.get().get("cnt"));
             }
             return map;
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toList()));
     }
 
     @ResponseBody
     @RequestMapping("/history/{n}")
-    public List<Dlt> history(@PathVariable("n") Integer n){
-        return dltService.history(n);
+    public JsonResult history(@PathVariable("n") Integer n){
+        return JsonResult.success(dltService.history(n));
     }
 
 }

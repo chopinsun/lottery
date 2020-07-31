@@ -1,6 +1,5 @@
 package com.suns.lottery.tball.common;
 
-import com.jcloud.recordcenter.client.dictionary.ExceptionLevelEnum;
 import lombok.Data;
 
 /**

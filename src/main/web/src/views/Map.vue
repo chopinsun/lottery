@@ -13,6 +13,7 @@
 import remoteLoad from '@/utils/remoteLoad.js'
 import { MapKey, MapCityName } from '@plugins/map'
 import { mapState, mapMutations, mapGetters } from 'vuex'
+import { nav } from '@store/types'
 export default {
   data() {
     return {
@@ -41,8 +42,16 @@ export default {
       return 'height:' + winHeight + 'px'
     },
   },
+  activated() {
+    this.showTopNav()
+    this.showBotNav()
+  },
   watch: {},
   methods: {
+    ...mapMutations({
+      showTopNav: nav.SHOW_TOP,
+      showBotNav: nav.SHOW_BOT,
+    }),
     // 搜索
     handleSearch() {
       if (this.searchKey) {

@@ -1,7 +1,7 @@
 package com.suns.lottery.tball.common;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jcloud.recordcenter.client.vo.PageInfo;
+import com.suns.lottery.tball.bean.PageInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;

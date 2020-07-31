@@ -3,6 +3,7 @@ package com.suns.lottery.tball.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.Kv;
+import com.suns.lottery.tball.common.JsonResult;
 import com.suns.lottery.tball.service.SsqService;
 import com.suns.lottery.tball.bean.Ssq;
 import com.suns.lottery.tball.service.filter.SsqFilter;
@@ -40,14 +41,14 @@ public class SsqController {
 
     @ResponseBody
     @RequestMapping("/pullAllData")
-    public String pullSsqdate() {
+    public JsonResult pullSsqdate() {
         ssqService.pullAllData();
-        return "done!";
+        return JsonResult.success("done!");
     }
 
     @ResponseBody
     @RequestMapping("/generate/min/{n}")
-    public Set<List<Integer>> generateMin(@PathVariable("n") Integer n) {
+    public JsonResult generateMin(@PathVariable("n") Integer n) {
         if (n == null || n == 0) {
             n = 10;
         }
@@ -55,12 +56,12 @@ public class SsqController {
             throw new RuntimeException("一次生成的数据不能超过2千");
         }
         Set<List<Integer>> list = ssqService.generateNumByMin(n);
-        return list;
+        return JsonResult.success(list);
     }
 
     @ResponseBody
     @RequestMapping("/generate/max/{n}")
-    public Set<List<Integer>> generateMax(@PathVariable("n") Integer n) {
+    public JsonResult generateMax(@PathVariable("n") Integer n) {
         if (n == null || n == 0) {
             n = 10;
         }
@@ -68,13 +69,13 @@ public class SsqController {
             throw new RuntimeException("一次生成的数据不能超过2千");
         }
         Set<List<Integer>> list = ssqService.generateNumByMax(n);
-        return list;
+        return JsonResult.success(list);
     }
 
 
     @ResponseBody
     @RequestMapping("/generate/mix/{n}")
-    public Set<List<Integer>> generateMix(@PathVariable("n") Integer n) {
+    public JsonResult generateMix(@PathVariable("n") Integer n) {
         if (n == null || n == 0) {
             n = 10;
         }
@@ -82,13 +83,13 @@ public class SsqController {
             throw new RuntimeException("一次生成的数据不能超过2千");
         }
         Set<List<Integer>> list = ssqService.generateNumByMix(n);
-        return list;
+        return JsonResult.success(list);
     }
 
 
     @ResponseBody
     @RequestMapping("/gtl/{type}/{n}")
-    public String generateMix(@PathVariable("type") String type, @PathVariable("n") Integer n) {
+    public JsonResult generateMix(@PathVariable("type") String type, @PathVariable("n") Integer n) {
         if (n == null || n == 0) {
             n = 10;
         }
@@ -104,17 +105,17 @@ public class SsqController {
             list = ssqService.generateNumByMix(n);
         }
         ssqService.saveToLib(list, "ssq");
-        return "done!";
+        return JsonResult.success("done!");
     }
 
 
     @ResponseBody
     @RequestMapping("/count")
-    public List<Map<String,Object>> count() {
+    public JsonResult count() {
         final List<Map<String,Integer>> redBallCnts = ssqService.redBallCount();
         final List<Map<String,Integer>> blueBallCnts = ssqService.blueBallCount();
 
-        return IntStream.range(0,34).mapToObj(i->i).map(i->{
+        return JsonResult.success(IntStream.range(0,34).mapToObj(i->i).map(i->{
             Map<String,Object> map = new HashMap<>();
             map.put("num",i);
             Optional<Map<String,Integer>> rb = redBallCnts.stream().filter(x->x.get("ball").equals(i)).findAny();
@@ -128,18 +129,18 @@ public class SsqController {
                 map.put("blueBall",bb.get().get("cnt"));
             }
             return map;
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toList()));
     }
 
     @ResponseBody
     @RequestMapping("/history/{n}")
-    public List<Ssq> history(@PathVariable("n") Integer n) {
-        return ssqService.history(n);
+    public JsonResult history(@PathVariable("n") Integer n) {
+        return JsonResult.success(ssqService.history(n));
     }
 
     @ResponseBody
     @RequestMapping("/ch/{name}")
-    public String ch(@PathVariable("name") String name) {
+    public JsonResult ch(@PathVariable("name") String name) {
         if(name.equals("cold")){
             List<Integer>list = ssqFilter.cold();
             log.info(list.size());
@@ -147,6 +148,6 @@ public class SsqController {
             List<Integer>list = ssqFilter.hot();
             log.info(list.size());
         }
-        return "done!";
+        return JsonResult.success("done!");
     }
 }

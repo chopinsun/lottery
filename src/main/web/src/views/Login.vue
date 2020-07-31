@@ -1,10 +1,13 @@
 <template>
   <div class="account">
     <v-card outlined rounded="false" height="100%">
+      <v-btn icon dark x-large @click="goBack()">
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
       <v-card-title>
-        <div style="height:166px;">
+        <div style="height:120px;">
           <v-avatar height="120" width="120">
-            <v-img src="../../asset/head.jpg" alt="head" />
+            <v-img src="../asset/head.jpg" alt="head" />
           </v-avatar>
         </div>
         <div class="welcome">Welcome</div>
@@ -20,21 +23,25 @@
         <v-text-field
           placeholder="密码"
           prepend-inner-icon="mdi-lock-outline"
+          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show1 ? 'text' : 'password'"
+          @click:append="show1 = !show1"
+          v-on:keydown.enter="login()"
           solo
           rounded
           v-model="password"
         ></v-text-field>
         <v-row style="margin:0">
           <v-col cols="4" style="text-align:left;padding:0;">
-            <a href="#" style="color:#eee;text-decoration:none;">立即注册</a>
+            <a href="#" style="color:#eee;text-decoration:none;" @click="goRegister">立即注册</a>
           </v-col>
           <v-col cols="8" style="text-align:right;padding:0;">
-            <a href="#" style="color:#eee;text-decoration:none;">忘记密码？</a>
+            <a href="#" style="color:#eee;text-decoration:none;" @click="forgetPwd">忘记密码？</a>
           </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn block color="blue-grey darken-4" dark rounded height="50">登录</v-btn>
+        <v-btn block color="blue-grey darken-4" dark rounded height="50" @click="login()">登录</v-btn>
       </v-card-actions>
       <v-list style="background: transparent;">
         <v-list-item>
@@ -44,7 +51,7 @@
           <v-list-item-group style="margin:0 auto;">
             <a href="#" style="padding:0 5px;">
               <img
-                src="../../asset/weixin.png"
+                src="../asset/weixin.png"
                 height="40"
                 width="40"
                 style="background-color:#fff;border-radius:40px;"
@@ -59,13 +66,14 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
-import { nav } from '@store/types'
+import { nav, account } from '@store/types'
 import service from '@service/AccountService'
 export default {
   data() {
     return {
       username: '',
       password: '',
+      show1: false,
     }
   },
   mounted() {
@@ -79,23 +87,48 @@ export default {
   },
   methods: {
     async login() {
-      const result = await service.login({ username, password })
+      const result = await service.login({
+        username: this.username,
+        password: this.$md5(this.password),
+      })
+      this.saveUserInfo(result)
+      this.$router.push('/home')
     },
     async logout() {
-      const result = await service.logout({ username, password })
+      const result = await service.logout({
+        username: this.username,
+        password: this.password,
+      })
+    },
+    goRegister() {
+      this.$alert.error('暂未开放')
+    },
+    forgetPwd() {
+      this.$alert.info('暂未开放')
+    },
+    goWechart() {
+      this.$alert.info('暂未开放')
+    },
+    goBack() {
+      if (window.history.length) {
+        this.$router.go(-1)
+      } else {
+        this.$router.push('/main/home')
+      }
     },
     ...mapMutations({
       hiddenTopNav: nav.HIDE_TOP,
       hiddenBotNav: nav.HIDE_BOT,
+      saveUserInfo: account.SAVE_USERINFO,
     }),
   },
 }
 </script>
 
 
-<style>
+<style scoped>
 .account {
-  background-image: url(../../asset/login-bg.jpeg);
+  background-image: url(../asset/login-bg.jpeg);
   background-size: cover;
   background-position: center;
   height: 100%;
@@ -128,11 +161,9 @@ export default {
   min-height: 660px;
 }
 .v-card__title {
-  height: 266px;
-  line-height: 220px;
+  height: 200px;
   display: block;
   text-align: center;
-  padding: 20px 0;
   font-size: 28px;
 }
 .welcome {
@@ -143,6 +174,6 @@ export default {
   text-align: center;
   width: 100%;
   display: block;
-  padding: 10px;
+  padding: 0 10px;
 }
 </style>

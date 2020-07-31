@@ -27,15 +27,15 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (res) => {
     //对响应数据做些事
-    if (res.status != 200) {
+    if (res && res.status != 200) {
       res.data.msg ? $alert.warn(res.data.msg) : false
       return Promise.reject(res)
     } else {
-      return res
+      return res.data
     }
   },
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       console.log(`未登录`)
       const location = error.response.headers['location']
       if (location) {
@@ -50,7 +50,7 @@ axios.interceptors.response.use(
         window.location.href = rurl
       }
     } else {
-      $alert.error('网络异常')
+      $alert.error('网络异常', error.response)
       return Promise.reject(error)
     }
   }

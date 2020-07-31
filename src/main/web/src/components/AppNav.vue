@@ -4,10 +4,10 @@
       absolute
       color="teal lighten-3"
       dark
+      v-show="nav.showTop"
       shrink-on-scroll
       dense
       scroll-target="#scrolling-techniques"
-      v-show="nav.showTop"
     >
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
@@ -40,7 +40,8 @@
         <v-icon>mdi-cog</v-icon>
       </v-btn>
       <v-avatar color @click="showLoginPage()">
-        <v-icon>mdi-account-circle</v-icon>
+        <v-icon v-if="!userAvatar">mdi-account-circle</v-icon>
+        <img :src="account.userinfo.avatar" v-if="userAvatar" style="width:28px;height:28px;" />
       </v-avatar>
     </v-app-bar>
 
@@ -116,7 +117,7 @@
           <v-btn icon absolute top right @click="showNumbers = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-card-text>
+          <v-card-text style="padding:0;">
             <v-list>
               <v-list-item v-for="(item,idx) in favorite.list" :key="idx">
                 <v-list-item-content>
@@ -195,25 +196,17 @@ export default {
   computed: {
     ...mapState({
       lottery: (state) => state.lottery,
-    }),
-    ...mapState({
       map: (state) => state.map,
-    }),
-    ...mapState({
       history: (state) => state.history,
-    }),
-    ...mapState({
       favorite: (state) => state.favorite,
-    }),
-    ...mapState({
       nav: (state) => state.nav,
-    }),
-    ...mapState({
       account: (state) => state.account,
-    }),
-    ...mapState({
       chart: (state) => state.chart,
+      alert: (state) => state.alert,
     }),
+    userAvatar() {
+      return this.account.userinfo && this.account.userinfo.avatar
+    },
   },
   mounted() {
     this.initDefaultData()
@@ -265,11 +258,11 @@ export default {
       this.showNumbers = false
     },
     showLoginPage() {
-      if (true) {
+      if (JSON.stringify(this.account.userinfo) == '{}') {
         this.$router.push('/login')
+        // this.bottomNav = 'account'
       } else {
       }
-      this.bottomNav = 'account'
     },
     ...mapMutations({
       setLotteryConfig: types.lottery.SET_CONFIG,

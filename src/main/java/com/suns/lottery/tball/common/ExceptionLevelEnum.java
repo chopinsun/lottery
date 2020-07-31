@@ -1,4 +1,4 @@
-package com.jcloud.recordcenter.client.dictionary;
+package com.suns.lottery.tball.common;
 
 /**
  * @program: recordcenter

@@ -3,13 +3,13 @@
 <mapper namespace="com.suns.lottery.tball.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="com.suns.lottery.tball.bean.User">
         <result column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
-        <result column="uid" jdbcType="VARCHAR" javaType="java.lang.String" property="code"/>
+        <result column="uid" jdbcType="VARCHAR" javaType="java.lang.String" property="uid"/>
         <result column="username" jdbcType="VARCHAR" javaType="java.lang.String" property="username"/>
         <result column="password" jdbcType="VARCHAR" javaType="java.lang.String" property="password"/>
         <result column="invite_code" jdbcType="VARCHAR" javaType="java.lang.String" property="inviteCode"/>
         <result column="source_type" jdbcType="TINYINT" javaType="java.lang.Integer" property="sourceType"/>
         <result column="invite_link" jdbcType="VARCHAR" javaType="java.lang.String" property="inviteLink"/>
-        <result column="create_time" jdbcType="DATETIME" javaType="java.util.Date" property="createTime"/>
+        <result column="create_time" jdbcType="DATE" javaType="java.util.Date" property="createTime"/>
         <result column="wechart" jdbcType="VARCHAR" javaType="java.lang.String" property="wechart"/>
         <result column="user_group" jdbcType="VARCHAR" javaType="java.lang.String" property="userGroup"/>
         <result column="authority_id" jdbcType="VARCHAR" javaType="java.lang.String" property="authorityId"/>

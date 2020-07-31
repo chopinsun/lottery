@@ -37,6 +37,7 @@ module.exports = {
         '@lib': '@/lib',
         '@plugins': '@/plugins',
         '@utils': '@/utils',
+        '@views': '@/views',
       },
     },
   },

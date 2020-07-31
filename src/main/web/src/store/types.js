@@ -1,8 +1,9 @@
 import { createModules } from '@lib/module'
 
-export const alter = createModules('alter', {
+export const alert = createModules('alert', {
   M: ['PUSH', 'REMOVE'],
-  G: ['MESSAGE', 'LEVEL'],
+  G: ['MESSAGE', 'LEVEL', 'DISPLAY'],
+  A: ['INFO', 'SUCCESS', 'WARN', 'ERROR'],
 })
 
 export const nav = createModules('nav', {
@@ -44,4 +45,5 @@ export default {
   chart,
   history,
   favorite,
+  alert,
 }

@@ -63,7 +63,7 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
-import { lottery, favorite } from '@store/types'
+import { lottery, favorite, nav } from '@store/types'
 import service from '@service/LotteryService'
 export default {
   data() {
@@ -74,16 +74,16 @@ export default {
     }
   },
   mounted() {
-    this.search()
+    if (!this.items.length) {
+      this.search()
+    }
+  },
+  activated() {
+    this.showTopNav()
+    this.showBotNav()
   },
   watch: {
-    type() {
-      this.search()
-    },
-    mod() {
-      this.search()
-    },
-    num() {
+    config() {
       this.search()
     },
     'favoriteList.length': {
@@ -100,6 +100,9 @@ export default {
       num: (state) => state.lottery.num,
       favoriteList: (state) => state.favorite.list,
     }),
+    config() {
+      return this.type + this.mod + this.num
+    },
   },
   methods: {
     async search() {
@@ -111,17 +114,23 @@ export default {
         num: this.num,
       })
       if (result) {
-        result.forEach((i) => this.items.push({ nums: i, status: 'mdi-heart' }))
+        this.items = []
+        result.forEach((i) =>
+          this.items.push({ nums: i, status: 'mdi-heart-outline' })
+        )
         this.mergeList()
       }
       this.overlay = false
     },
     chooseNum(item) {
-      if (this.selectedList.indexOf(item.nums) != -1) {
+      if (item.status === 'mdi-heart-outline') {
         item.status = 'mdi-heart'
+      } else if (item.status === 'mdi-heart') {
+        item.status = 'mdi-heart-outline'
+      }
+      if (this.selectedList.indexOf(item.nums) != -1) {
         this.selectedList = this.selectedList.filter((i) => i != item.nums)
       } else {
-        item.status = 'mdi-heart-outline'
         this.selectedList.push(item.nums)
       }
       this.setFavorite(this.selectedList)
@@ -131,6 +140,8 @@ export default {
       setFavorite: favorite.SET,
       removeFavorite: favorite.RMOVE,
       clearFavorite: favorite.CLEAR,
+      showTopNav: nav.SHOW_TOP,
+      showBotNav: nav.SHOW_BOT,
     }),
     mergeList() {
       this.selectedList = [...this.favoriteList]
