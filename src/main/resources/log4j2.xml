@@ -6,7 +6,11 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{rid}] %-5level %C.%M %L - %m%n"/>
         </Console>
-
+        <RollingFile name="RollingFile" fileName="./log/lottery.log"
+                     filePattern="../log/lottery-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout charset="UTF-8" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %C.%M %L - %m%n"/>
+            <SizeBasedTriggeringPolicy size="200 MB"/>
+        </RollingFile>
     </appenders>
     <loggers>
         <Logger name="com.suns.lottery.tball.mapper" level="ERROR" additivity="false">
@@ -14,6 +18,7 @@
         </Logger>
         <root level="INFO">
             <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFile"/>
         </root>
     </loggers>
 </configuration>
