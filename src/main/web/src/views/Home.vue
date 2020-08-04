@@ -1,6 +1,6 @@
 <template>
   <div class="homepage">
-    <v-list>
+    <v-list style="padding: 10px  0 60px 0;">
       <v-list-item v-for="(item,idx) in items" :key="idx">
         <v-list-item-content v-show="type==='ssq'">
           <v-row style="margin:0">
