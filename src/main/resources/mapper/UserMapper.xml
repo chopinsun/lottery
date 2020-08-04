@@ -16,7 +16,8 @@
         <result column="mobile" jdbcType="VARCHAR" javaType="java.lang.String" property="mobile"/>
         <result column="third_flag" jdbcType="TINYINT" javaType="java.lang.Integer" property="thridFlag"/>
         <result column="status" jdbcType="TINYINT" javaType="java.lang.Integer" property="status"/>
-
+        <result column="avatar" jdbcType="VARCHAR" javaType="java.lang.String" property="avatar"/>
+        <result column="vip" jdbcType="TINYINT" javaType="java.lang.Integer" property="vip"/>
     </resultMap>
 
     <select id="findByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -31,8 +32,8 @@
     </select>
 
     <insert id="addUser" parameterType="com.suns.lottery.tball.bean.User">
-        insert into user(uid,username,password,invite_code,source_type,invite_link,create_time,wechart,user_group,authority_id,mobile,third_flag,status)
-        values (#{uid},#{username},#{password},#{inviteCode},#{sourceType},#{inviteLink},#{createTime},#{wechart},#{userGroup},#{authorityId},#{mobile},#{thridFlag},#{status})
+        insert into user(uid,username,password,invite_code,source_type,invite_link,create_time,wechart,user_group,authority_id,mobile,third_flag,status,0)
+        values (#{uid},#{username},#{password},#{inviteCode},#{sourceType},#{inviteLink},#{createTime},#{wechart},#{userGroup},#{authorityId},#{mobile},#{thridFlag},#{status},#{vip})
     </insert>
 
     <update id="updateByUid">
@@ -74,6 +75,12 @@
         </if>
         <if test="status!=null ">
             status =#{status,jdbcType=TINYINT}
+        </if>
+        <if test="avatar!=null and avatar!='' ">
+            avatar =#{avatar,jdbcType=VARCHAR}
+        </if>
+        <if test="vip!=null ">
+            vip =#{vip,jdbcType=TINYINT}
         </if>
         </trim>
         where uid = #{uid,jdbcType=VARCHAR}

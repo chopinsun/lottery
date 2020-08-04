@@ -41,5 +41,9 @@ export default new Router({
       path: '/account',
       component: () => import('@views/Account'),
     },
+    {
+      path: '/userInfo',
+      component: () => import('@views/UserInfo'),
+    },
   ],
 })

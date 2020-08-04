@@ -35,7 +35,7 @@
       <v-btn
         icon
         @click.stop="showDialog"
-        v-show="nav.currentPage==='Home' || nav.currentPage ==='Analysis' || nav.currentPage ==='Map'"
+        v-show="nav.currentPage==='home' || nav.currentPage ==='analysis' || nav.currentPage ==='nearby'"
       >
         <v-icon>mdi-cog</v-icon>
       </v-btn>
@@ -245,11 +245,11 @@ export default {
       this.setLotteryConfig(this.confirmLotteryConifg)
     },
     showDialog() {
-      if (this.nav.currentPage === 'Home') {
+      if (this.nav.currentPage === 'home') {
         this.lotteryConfig.dialog = true
-      } else if (this.nav.currentPage === 'Analysis') {
+      } else if (this.nav.currentPage === 'analysis') {
         this.chartConfig.dialog = true
-      } else if (this.nav.currentPage === 'Map') {
+      } else if (this.nav.currentPage === 'nearby') {
         this.mapconfig.dialog = true
       }
     },
@@ -262,6 +262,7 @@ export default {
         this.$router.push('/login')
         // this.bottomNav = 'account'
       } else {
+        this.$router.push('/userInfo')
       }
     },
     ...mapMutations({
@@ -280,7 +281,7 @@ export default {
       this.setLotteryConfig(this.confirmLotteryConifg)
       this.setChartMod(this.chartmod)
       this.setMapRange(this.map)
-      this.setCurrentPage('Home')
+      this.setCurrentPage('home')
     },
   },
 }

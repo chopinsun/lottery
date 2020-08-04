@@ -75,7 +75,7 @@ export default {
   },
   mounted() {
     if (!this.items.length) {
-      this.search()
+      this.search().catch((err) => (this.overlay = false))
     }
   },
   activated() {

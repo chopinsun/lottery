@@ -100,7 +100,7 @@ export default {
   },
   mounted() {
     if (!this.items.length) {
-      this.search()
+      this.search().catch((err) => (this.overlay = false))
     }
   },
   activated() {
@@ -119,8 +119,8 @@ export default {
         lotteryType: this.lotteryType,
         pageSize: this.pageSize,
       })
+      this.overlay = false
       result.forEach((e) => {
-        this.overlay = false
         let i = e
         i.numbers =
           `<span class="num rednum">` +

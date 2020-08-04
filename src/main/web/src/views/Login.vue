@@ -92,7 +92,7 @@ export default {
         password: this.$md5(this.password),
       })
       this.saveUserInfo(result)
-      this.$router.push('/home')
+      this.$router.push('/main/home')
     },
     async logout() {
       const result = await service.logout({

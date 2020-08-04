@@ -24,6 +24,8 @@ public class UserVo {
     private String authorityId;
     private String mobile;
     private String avatar;
+    private Integer status;
+    private Integer vip;
 
 
     public static UserVo from(User user){
@@ -35,6 +37,8 @@ public class UserVo {
                 .authorityId(user.getAuthorityId())
                 .mobile(user.getMobile())
                 .avatar(user.getAvatar())
+                .vip(user.getVip())
+                .status(user.getStatus())
                 .build();
     }
 

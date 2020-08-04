@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <alert></alert>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </v-app>
 </template>
 

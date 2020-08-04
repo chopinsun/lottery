@@ -30,4 +30,6 @@ public class User {
     private String mobile;
     private Integer thridFlag;
     private String avatar;
+    private Integer status;
+    private Integer vip;
 }

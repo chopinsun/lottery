@@ -1,19 +1,25 @@
 <template>
-  <div class="bottom-nav" v-show="nav.showBot">
-    <v-bottom-navigation v-model="bottomNav" shift v-on:change="changePage" fixed>
-      <v-btn value="home">
+  <div class="bottom-nav">
+    <v-bottom-navigation
+      v-model="bottomNav"
+      shift
+      v-on:change="changePage"
+      fixed
+      :input-value="nav.showBot"
+    >
+      <v-btn value="home" :class="navClass.home">
         <span>Home</span>
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn value="history">
+      <v-btn value="history" :class="navClass.history">
         <span>History</span>
         <v-icon>mdi-database-search</v-icon>
       </v-btn>
-      <v-btn value="nearby">
+      <v-btn value="nearby" :class="navClass.nearby">
         <span>Nearby</span>
         <v-icon>mdi-map-marker</v-icon>
       </v-btn>
-      <v-btn value="analysis">
+      <v-btn value="analysis" :class="navClass.analysis">
         <span>Analysis</span>
         <v-icon>mdi-chart-line</v-icon>
       </v-btn>
@@ -28,14 +34,13 @@ export default {
   data() {
     return {
       bottomNav: 'home',
+      navClass: {
+        home: '',
+        history: '',
+        nearby: '',
+        analysis: '',
+      },
     }
-  },
-  watch: {
-    $route(to, from) {
-      this.bottomNav = this.pathToName(to)
-      console.log(to, this.bottomNav)
-      // this.setCurrentPage(this.bottomNav)
-    },
   },
   computed: {
     ...mapState({
@@ -47,7 +52,6 @@ export default {
       setCurrentPage: nav.CHOOSE_PAGE,
     }),
     changePage(page) {
-      console.log(page, this.nameToPath(page))
       this.setCurrentPage(page)
       if (this.nameToPath(page) !== this.$router.path) {
         this.$router.push(this.nameToPath(page))
@@ -68,16 +72,17 @@ export default {
       }
     },
     pathToName(path) {
-      if ('/main/home' === path) {
+      console.log(path, path == '/main/history')
+      if ('/main/home' == path) {
         return 'home'
-      } else if ('/main/history' === path) {
+      } else if ('/main/history' == path) {
+        console.log(1111)
         return 'history'
-      } else if ('/main/nearby' === path) {
-        return 'map'
-      } else if ('/main/analysis' === path) {
+      } else if ('/main/map' == path) {
+        return 'nearby'
+      } else if ('/main/analysis' == path) {
         return 'analysis'
       } else {
-        console.log('4042')
         return 'home'
       }
     },
