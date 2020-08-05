@@ -113,13 +113,11 @@ export default {
         type: this.type,
         num: this.num,
       })
-      if (result) {
         this.items = []
         result.forEach((i) =>
           this.items.push({ nums: i, status: 'mdi-heart-outline' })
         )
         this.mergeList()
-      }
       this.overlay = false
     },
     chooseNum(item) {
