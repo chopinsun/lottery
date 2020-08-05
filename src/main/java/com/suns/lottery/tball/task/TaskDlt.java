@@ -1,5 +1,6 @@
 package com.suns.lottery.tball.task;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.suns.lottery.tball.bean.*;
 import com.suns.lottery.tball.mapper.DltDetailMapper;
@@ -62,7 +63,7 @@ public class TaskDlt {
         log.info("------------启动定时任务，拉取最新一期数据-----------");
         String dbLastCode = dbLastCode();
         String lastCode = remoteLastCode(dbLastCode);
-        IntStream.range(Integer.valueOf(dbLastCode),Integer.valueOf(lastCode))
+        IntStream.range(Integer.valueOf(dbLastCode),Integer.valueOf(lastCode)+1)
                 .mapToObj(i->i)
                 .map(x->String.valueOf(x))
                 .map(term->historyData(term))
@@ -96,7 +97,8 @@ public class TaskDlt {
     **/
     private HistoryDataDlt historyData(String term){
         HttpHeaders headers  = new HttpHeaders();
-        HistoryDataDlt response = httpInvoker.get("https://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx?_ltype=4&_term="+ term,HistoryDataDlt.class,headers,new LinkedMultiValueMap<>());
+        String html = httpInvoker.get("https://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx?_ltype=4&_term="+ term,String.class,headers,new LinkedMultiValueMap<>());
+        HistoryDataDlt response = JSONArray.parseArray(html,HistoryDataDlt.class).get(0);
         return response;
     }
 }

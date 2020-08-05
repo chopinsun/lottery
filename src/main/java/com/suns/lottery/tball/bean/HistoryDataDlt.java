@@ -45,7 +45,8 @@ public class HistoryDataDlt {
                     .b1(Integer.valueOf(codeNumber.get(5)))
                     .b2(Integer.valueOf(codeNumber.get(6)))
                     .sales(NumberUtils.parseLong(lottery.getTotalSales()))
-                    .lotteryTimestamp(String.valueOf(lottery.getOpenTime().getTime()))
+                    .poolmoney(NumberUtils.parseLong(lottery.getPool()))
+                    .lotteryTimestamp(String.valueOf(lottery.getOpenTime().getTime()/1000))
                     .lotteryDate(date)
                 .build();
             List<DltDetail> dltDetails = details.stream()
@@ -53,9 +54,9 @@ public class HistoryDataDlt {
                             .code(lottery.getTerm())
                             .level(x.getNum() - 400)
                             .levelName(x.getLevel())
-                            .num(Integer.valueOf(x.getPiece()))
-                            .money(Integer.valueOf(x.getMoney().replaceAll(",","")))
-                            .allMoney(Long.valueOf(x.getAllmoney().replaceAll(",","")))
+                            .num(NumberUtils.parseInt(x.getPiece()))
+                            .money(NumberUtils.parseInt(x.getMoney()))
+                            .allMoney(NumberUtils.parseLong(x.getAllmoney()))
                             .build())
                     .collect(Collectors.toList());
             dlt.setDetails(dltDetails);

@@ -31,7 +31,7 @@
     insert into dlt (code, r1, r2,
       r3, r4, r5,
       b1, b2, sales, poolmoney, 
-      content, type1_num, lottery_date,lottery_timestamp,seq,create_time)
+      content, lottery_date,lottery_timestamp,seq,create_time)
     values (#{code,jdbcType=VARCHAR}, #{r1,jdbcType=INTEGER}, #{r2,jdbcType=INTEGER},
       #{r3,jdbcType=INTEGER}, #{r4,jdbcType=INTEGER}, #{r5,jdbcType=INTEGER},
       #{b1,jdbcType=INTEGER}, #{b2,jdbcType=INTEGER}, #{sales,jdbcType=BIGINT}, #{poolmoney,jdbcType=BIGINT},

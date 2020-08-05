@@ -24,7 +24,12 @@ public class NumberUtils {
     }
 
     public static Long parseLong(String num){
+        num = num.substring(0,num.indexOf(".")<=0?num.length():num.indexOf("."));
         return Long.valueOf(num.replaceAll(",",""));
+    }
+
+    public static Double parseDouble(String num){
+        return Double.valueOf(num.replaceAll(",",""));
     }
 
     public static String toString(List<Integer> list){
