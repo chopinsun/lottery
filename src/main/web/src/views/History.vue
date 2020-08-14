@@ -162,18 +162,7 @@ export default {
 .history {
   padding: 10px 8px 60px 8px;
 }
-.num {
-  padding: 0 5px;
-}
-.rednum {
-  color: red !important;
-}
-.bluenum {
-  color: blue;
-}
-.yellownum {
-  color: yellowgreen;
-}
+
 .v-snack__wrapper {
   box-shadow: none !important;
 }
@@ -202,6 +191,18 @@ export default {
 }
 </style>
 <style>
+.num {
+  padding: 0 5px;
+}
+.rednum {
+  color: red !important;
+}
+.bluenum {
+  color: blue;
+}
+.yellownum {
+  color: yellowgreen;
+}
 .history .v-data-table-header-mobile tr {
   display: none;
 }

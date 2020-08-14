@@ -100,17 +100,17 @@ public class BizException extends RuntimeException {
 
     private static CodeMessage defaultError(String message){
         return CustomCode.builder()
-                .code(ResultCode.FAIL_BUSINESS.getCode())
+                .code(ResultCode.ERROR_UNKNOWN.getCode())
                 .message(generateMessageString(message))
                 .build();
     }
 
     private static String generateMessageString(String message){
-        return "["+ ResultCode.FAIL_BUSINESS.getMessage() + "]  " +message;
+        return "["+ ResultCode.ERROR_UNKNOWN.getMessage() + "]  " +message;
     }
 
     private static String generateMessageString(CodeMessage error,String message){
-        return message + " | detail--->"+error.getMessage();
+        return message + " | "+error.getMessage();
     }
 
 }

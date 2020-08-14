@@ -87,7 +87,12 @@ const post = (url, params) => {
       .post(url, params)
       .then(
         (response) => {
-          resolve(response.data)
+          if(response.success){
+            resolve(response.data)
+          }else{
+            alert.error(response.message)
+          }
+          
         },
         (err) => {
           reject(err)

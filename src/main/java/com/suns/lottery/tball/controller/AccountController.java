@@ -4,6 +4,7 @@ import com.suns.lottery.tball.bean.User;
 import com.suns.lottery.tball.bean.vo.ThirdCallBack;
 import com.suns.lottery.tball.bean.vo.UserVo;
 import com.suns.lottery.tball.common.JsonResult;
+import com.suns.lottery.tball.common.ResultCode;
 import com.suns.lottery.tball.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class AccountController {
     @PostMapping("/login/{username}/{password}")
     public JsonResult login(@PathVariable("username") String username, @PathVariable("password")String password){
         User user = accountService.checkPassword(username,password);
-        return user!=null?JsonResult.success(UserVo.from(user)):JsonResult.fail("用户名或密码不正确");
+        return user!=null?JsonResult.success(UserVo.from(user)):JsonResult.fail(ResultCode.ILLEGAL_USER);
     }
 
     @ResponseBody

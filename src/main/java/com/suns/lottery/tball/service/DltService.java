@@ -252,14 +252,18 @@ public class DltService {
             redBallsResult.add(map);
         });
         log.info("红球-原始数据:{}",JSONArray.toJSONString(redBallsResult));
-
-        List<Map<String,Integer>> blueBallsResult = dltMapper.groupByBlueNum();
-        log.info("蓝球-原始数据:{}",JSONArray.toJSONString(blueBallsResult));
         return redBallsResult;
     }
 
     public List<Map<String,Integer>> blueBallCount(){
-        List<Map<String,Integer>> blueBallsResult = dltMapper.groupByBlueNum();
+        List<Map<String,Integer>> blueBallsResult= new ArrayList<>();
+        IntStream.range(1, 13).forEach(i->{
+            Map<String,Integer> map = new HashMap<>();
+            int n = dltMapper.countByBlueNum(i);
+            map.put("ball",i);
+            map.put("cnt",n);
+            blueBallsResult.add(map);
+        });
         log.info("蓝球-原始数据:{}",JSONArray.toJSONString(blueBallsResult));
         return blueBallsResult;
     }
