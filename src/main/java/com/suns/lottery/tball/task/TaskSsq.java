@@ -54,7 +54,7 @@ public class TaskSsq {
      * @Date: 2020/1/14 19:46
      *
      **/
-    @Scheduled(cron = "0 30 21 * * 2,4,7")
+    @Scheduled(cron = "0 0 22 * * 2,4,7")
     public void upateSSqData(){
         log.info("------------启动定时任务，拉取最新一期数据-----------");
         //计算差几期数据没有同步
