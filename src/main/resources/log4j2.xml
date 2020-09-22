@@ -4,10 +4,10 @@
     <appenders><!--log_path为vm参数，在tomcat中start.sh配置,log4j2在vm参数前要加sys:-->
 
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{rid}] %-5level %C.%M %L - %m%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t]  %-5level %C.%M %L - %m%n"/>
         </Console>
-        <RollingFile name="RollingFile" fileName="./log/lottery.log"
-                     filePattern="../log/lottery-%d{yyyy-MM-dd}-%i.log.gz">
+        <RollingFile name="RollingFile" fileName="./log/lottery.txt"
+                     filePattern="../log/lottery-%d{yyyy-MM-dd}-%i.txt.gz">
             <PatternLayout charset="UTF-8" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %C.%M %L - %m%n"/>
             <SizeBasedTriggeringPolicy size="200 MB"/>
         </RollingFile>
