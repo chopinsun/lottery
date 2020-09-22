@@ -56,7 +56,7 @@ public class TaskSsq {
      **/
     @Scheduled(cron = "0 0 22 * * 2,4,7")
     public void upateSSqData(){
-        log.info("------------启动定时任务，拉取最新一期数据-----------");
+        log.info("------------启动定时任务，拉取最新一期数据 [双色球]-----------");
         //计算差几期数据没有同步
         String lastCode = remoteLastCode();
         String dbLastCode = dbLastCodeSsq();

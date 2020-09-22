@@ -60,7 +60,7 @@ public class TaskDlt {
      **/
     @Scheduled(cron = "0 30 21 * * 1,3,6")
     public void upateDltData(){
-        log.info("------------启动定时任务，拉取最新一期数据-----------");
+        log.info("------------启动定时任务，拉取最新一期数据 [大乐透]-----------");
         String dbLastCode = dbLastCode();
         String lastCode = remoteLastCode(dbLastCode);
         IntStream.range(Integer.valueOf(dbLastCode),Integer.valueOf(lastCode)+1)
