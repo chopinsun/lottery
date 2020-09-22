@@ -24,6 +24,7 @@ public class NumberUtils {
     }
 
     public static Long parseLong(String num){
+        num = num.replaceAll("_","").replaceAll("-","").replaceAll(" ","");
         num = num.substring(0,num.indexOf(".")<=0?num.length():num.indexOf("."));
         return Long.valueOf(num.replaceAll(",",""));
     }
