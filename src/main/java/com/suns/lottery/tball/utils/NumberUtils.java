@@ -3,6 +3,7 @@ package com.suns.lottery.tball.utils;
 import com.alibaba.fastjson.JSONArray;
 import com.suns.lottery.tball.bean.Kv;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +25,10 @@ public class NumberUtils {
     }
 
     public static Long parseLong(String num){
-        num = num.replaceAll("_","").replaceAll("-","").replaceAll(" ","");
+        num = num.replaceAll("_","").replaceAll("-","").trim();
+        if(StringUtils.isBlank(num)){
+            return  null;
+        }
         num = num.substring(0,num.indexOf(".")<=0?num.length():num.indexOf("."));
         return Long.valueOf(num.replaceAll(",",""));
     }
